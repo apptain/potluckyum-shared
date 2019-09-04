@@ -1,6 +1,6 @@
 {
-	"name": "shared",
-	"version": "0.0.1",
+	"name": "potluckyum-shared",
+	"version": "0.0.2",
 	"scripts": {
 		"lint": "eslint ./"
 	},
@@ -9,6 +9,7 @@
 		"lodash": "^4.17.11",
 		"react": "16.6.3",
 		"react-native-platform-touchable": "^1.1.1",
+		"react-native-vector-icons": "^6.6.0",
 		"react-redux": "^6.0.0",
 		"redux": "^4.0.1",
 		"redux-devtools-extension": "^2.13.7",
@@ -23,7 +24,6 @@
 		"babel-eslint": "^10.0.1",
 		"eslint": "^5.11.0",
 		"eslint-config-airbnb": "^17.1.0",
-		"eslint-config-rallycoding": "github:StephenGrider/ESLint-Rallycoding#3/head",
 		"eslint-plugin-import": "^2.14.0",
 		"eslint-plugin-jsx-a11y": "^6.1.2",
 		"eslint-plugin-react": "^7.11.1"
