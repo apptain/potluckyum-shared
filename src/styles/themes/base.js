@@ -3,9 +3,9 @@ const fontSizes = [12, 14, 16, 20, 24, 36, 48, 80, 96];
 const fontWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
 const fonts = {
-	regular: 'Lato-Regular',
-	bold: 'Lato-Bold',
-	light: 'Lato-Light',
+	regular: 'Arial',
+	bold: 'Arial',
+	light: 'Arial',
 };
 
 const breakpoints = ['40em', '52em', '64em'];
