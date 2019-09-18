@@ -1,8 +1,11 @@
 import { combineReducers } from 'redux';
-import appReducer from './app';
 
-const rootReducer = combineReducers({
-	app: appReducer,
-});
+import auth from './auth';
+import events from './events';
+import invitations from './invitations';
 
-export default rootReducer;
+export default combineReducers({
+  auth,
+  events,
+  invitations
+})

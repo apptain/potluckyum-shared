@@ -1,11 +1,14 @@
-import { all, fork } from 'redux-saga/effects';
+import { all } from 'redux-saga/effects';
 
-/* ------------- Sagas ------------- */
-import watchApp from './app';
+import authSagas from './authSagas';
+import eventSagas from './eventSagas';
+import invitationSagas from './invitationSagas';
 
-/* ------------- Watchers ------------- */
-export default function* root() {
-	yield all([
-		yield fork(watchApp),
-	]);
+export default function* rootSaga() {
+
+  yield all([
+    ...authSagas,
+    ...eventSagas,
+    ...invitationSagas
+  ]);
 }
