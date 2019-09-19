@@ -13,7 +13,7 @@ import Form from "react-jsonschema-form";
 import eventInvitationSchema from "./schemas/eventInvitationSchema";
 import eventInvitationUISchema from "./schemas/eventInvitationUISchema";
 import formWidgets from "../../../schemaform/widgets";
-import CustomFieldTemplate from "../../../WellRESTed/domain/customFieldTemplate";
+import CustomFieldTemplate from "../../../schemaform/customFieldTemplate";
 import { TextField, RadioButton, RadioButtonGroup, Checkbox, SelectField, MenuItem }  from 'material-ui';
 
 export default function(props) {

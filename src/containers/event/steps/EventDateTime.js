@@ -1,6 +1,6 @@
 import React from 'react';
 import widgets from "../../../schemaform/widgets";
-import CustomFieldTemplate from "../../../WellRESTed/domain/customFieldTemplate";
+import CustomFieldTemplate from "../../../schemaform/customFieldTemplate";
 
 import Form from "react-jsonschema-form";
 import eventDateTimeSchema from "./schemas/eventDateTimeSchema";
