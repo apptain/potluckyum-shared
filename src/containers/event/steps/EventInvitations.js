@@ -1,11 +1,7 @@
 import React, { Component, useState } from "react";
-import set from "lodash/fp/set";
-import { Field } from "redux-form";
 import Table from "react-table";
 import * as BS from "react-bootstrap";
-import initialData from "./table/dataFactory";
 import FormProvider from "./table/FormProvider";
-import { avatarColumnProps } from "./table/AvatarsCell";
 import ActionsCell from "./table/ActionsCell";
 import HighlightCell from "./table/HighlightCell";
 import GridFilters from "./table/GridFilters";
@@ -14,11 +10,11 @@ import eventInvitationSchema from "./schemas/eventInvitationSchema";
 import eventInvitationUISchema from "./schemas/eventInvitationUISchema";
 import formWidgets from "../../../schemaform/widgets";
 import CustomFieldTemplate from "../../../schemaform/customFieldTemplate";
-import { TextField, RadioButton, RadioButtonGroup, Checkbox, SelectField, MenuItem }  from 'material-ui';
+import { TextField, FlatButton, RadioButtonGroup, Checkbox, SelectField, MenuItem }  from 'material-ui';
 
 export default function(props) {
   const [editing, setEditing] = useState(false);
-  //const state = { data: [], editing: null };
+  const state = { data: [], editing: null };
 
   const editableComponent = ({ input, editing, value, ...rest }) => {
     const Component = editing ? BS.FormControl : BS.FormControl.Static;
@@ -83,7 +79,6 @@ export default function(props) {
     props.eventUpdate(event);
     //props.jumpToStep(1);
   };
-  debugger;
 
   let invitations = props.event.invitations || [];
   invitations = invitations.filter(function(item){
@@ -93,14 +88,11 @@ export default function(props) {
   try {
     return (
       <React.Fragment>
+
         <Form
           safeRenderCompletion={true}
-          //formContext={this.state.doc}
           schema={eventInvitationSchema()}
-          //formData={ doc }
           uiSchema={eventInvitationUISchema()}
-          //validate={this.props.validate}
-          //onChange={docChangeDebounced}
           onSubmit={handleSubmit}
           widgets={formWidgets}
           FieldTemplate={CustomFieldTemplate}

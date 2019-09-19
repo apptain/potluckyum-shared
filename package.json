@@ -1,9 +1,14 @@
 {
 	"name": "potluckyum-shared",
-	"version": "0.0.5",
+	"version": "0.0.6",
+	"main": "lib/setup.js",
 	"scripts": {
-		"lint": "eslint ./"
+		"lint": "eslint ./",
+		"build": "node --max-old-space-size=8192 node_modules/rollup/dist/bin/rollup -c rollup.config.js"
 	},
+	"files": [
+		"src"
+	],
 	"dependencies": {
 		"aws-amplify": "^1.1.40",
 		"debounce": "^1.2.0",
@@ -25,7 +30,7 @@
 		"react-native-platform-touchable": "^1.1.1",
 		"react-native-vector-icons": "^6.6.0",
 		"react-redux": "^7.1.1",
-		"react-stepzilla": "^6.0.1",
+		"react-stepzilla": "^6.0.2",
 		"react-table": "^6.10.3",
 		"react-test-renderer": "^16.9.0",
 		"react-time-picker": "^3.7.1",
@@ -42,12 +47,39 @@
 		"tinymce": "^5.0.15"
 	},
 	"devDependencies": {
+		"@babel/cli": "^7.6.0",
+		"@babel/core": "^7.6.0",
+		"@babel/node": "^7.6.1",
+		"@babel/plugin-external-helpers": "^7.2.0",
+		"@babel/plugin-proposal-class-properties": "^7.5.5",
+		"@babel/plugin-proposal-decorators": "^7.6.0",
+		"@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+		"@babel/plugin-transform-runtime": "^7.6.0",
+		"@babel/preset-env": "^7.6.0",
+		"@babel/preset-flow": "^7.0.0",
+		"@babel/preset-react": "^7.0.0",
+		"@babel/preset-typescript": "^7.6.0",
+		"@babel/register": "^7.6.0",
+		"autoprefixer": "^9.6.1",
 		"babel-eslint": "^10.0.3",
+		"babel-plugin-transform-class-properties": "^6.24.1",
 		"eslint": "^6.4.0",
 		"eslint-config-airbnb": "^18.0.1",
 		"eslint-plugin-import": "^2.18.2",
 		"eslint-plugin-jsx-a11y": "^6.2.3",
-		"eslint-plugin-react": "^7.14.3"
+		"eslint-plugin-react": "^7.14.3",
+		"rollup": "^1.21.4",
+		"rollup-plugin-babel": "^4.3.3",
+		"rollup-plugin-commonjs": "^10.1.0",
+		"rollup-plugin-filesize": "^6.2.0",
+		"rollup-plugin-json": "^4.0.0",
+		"rollup-plugin-local-resolve": "^1.0.7",
+		"rollup-plugin-node-resolve": "^5.2.0",
+		"rollup-plugin-peer-deps-external": "^2.2.0",
+		"rollup-plugin-postcss": "^2.0.3",
+		"rollup-plugin-replace": "^2.2.0",
+		"rollup-plugin-terser": "^5.1.2",
+		"rollup-plugin-typescript2": "^0.24.2"
 	},
 	"peerDependencies": {
 		"react-native": "*",
