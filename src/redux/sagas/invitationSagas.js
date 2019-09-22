@@ -33,5 +33,5 @@ function* watchInvitationCreateRequest() {
 }
 
 export default [
-  watchInvitationCreateRequest(),
+  //watchInvitationCreateRequest(),
 ];

@@ -16,9 +16,19 @@ import formWidgets from "../../../schemaform/widgets";
 import CustomFieldTemplate from "../../../schemaform/customFieldTemplate";
 import { TextField, RadioButton, RadioButtonGroup, Checkbox, SelectField, MenuItem }  from 'material-ui';
 
+import { MdDone, MdPersonAdd, MdCancel } from 'react-icons/md';
+import Box from '@material-ui/core/Box';
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+
 export default function(props) {
-  const [editing, setEditing] = useState(false);
-  //const state = { data: [], editing: null };
+  const [editing, setEditing] = useState(null);
+  const [eventFormModalIsOpen, eventFormModalToggle ] = useState(false);
+
+
+  const toggleModal = event => {
+    eventFormModalToggle(!eventFormModalIsOpen);
+  }
 
   const editableComponent = ({ input, editing, value, ...rest }) => {
     const Component = editing ? BS.FormControl : BS.FormControl.Static;
@@ -47,10 +57,10 @@ export default function(props) {
   const getActionProps = (gridState, rowProps) =>
     (
       rowProps && {
-      mode: state.editing === rowProps.original ? "edit" : "view",
+      mode: editing === rowProps.original ? "edit" : "view",
       actions: {
-        onEdit: () => setEditing(true),
-        onCancel: () => setState({ editing: null })
+        onEdit: () => { debugger; setEditing({}); },
+        onCancel: () => { debugger;  setEditing(null); },
       }
     }) ||
     {};
@@ -63,9 +73,9 @@ export default function(props) {
       getProps: getActionProps,
       Cell: ActionsCell
     },
-    { Header: "Name",  accessor: "inviteeName", ...editableColumnProps, maxWidth: 220 },
-    { Header: "Email or Phone", accessor: "phoneNumberOrEmail", ...editableColumnProps, maxWidth: 280 },
-    { Header: "Message", accessor: "message", ...editableColumnProps }
+    { Header: "Name",  accessor: "inviteeName", ...editableColumnProps,filterable: false, maxWidth: 220 },
+    { Header: "Email or Phone", accessor: "phoneNumberOrEmail", ...editableColumnProps, filterable: false, maxWidth: 280 },
+    { Header: "Message", accessor: "message",  ...editableColumnProps, filterable: false }
   ];
 
   const handleSubmit = ({formData}) => {
@@ -83,33 +93,48 @@ export default function(props) {
     props.eventUpdate(event);
     //props.jumpToStep(1);
   };
-  debugger;
 
   let invitations = props.event.invitations || [];
   invitations = invitations.filter(function(item){
     return !!item;
   });
 
-  try {
-    return (
+  const { classes } = props;
+
+
+  return (
       <React.Fragment>
-        <Form
-          safeRenderCompletion={true}
-          //formContext={this.state.doc}
-          schema={eventInvitationSchema()}
-          //formData={ doc }
-          uiSchema={eventInvitationUISchema()}
-          //validate={this.props.validate}
-          //onChange={docChangeDebounced}
-          onSubmit={handleSubmit}
-          widgets={formWidgets}
-          FieldTemplate={CustomFieldTemplate}
-        />
+        <Grid container justify="center">
+          <Grid item xs={1}>
+            <MdPersonAdd size={64} onClick={toggleModal}></MdPersonAdd>
+          </Grid>
+          <Grid item xs={11}>
+            {eventFormModalIsOpen &&
+              <Form
+                safeRenderCompletion={true}
+                schema={eventInvitationSchema()}
+                //formData={ doc }
+                uiSchema={eventInvitationUISchema()}
+                //validate={this.props.validate}
+                //onChange={docChangeDebounced}
+                onSubmit={handleSubmit}
+                widgets={formWidgets}
+                FieldTemplate={CustomFieldTemplate}
+              >
+                <div className={""}>
+                  <button type="button"><MdCancel/></button>
+                  <button type="submit"><MdDone/></button>
+                </div>
+              </Form>
+            }
+          </Grid>
+        </Grid>
+
         <FormProvider
           form="inline"
           onSubmit={handleSubmit}
-          onSubmitSuccess={() => setState({ editing: null })}
-          initialValues={state.editing}
+          //onSubmitSuccess={() => setState({ editing: null })}
+          initialValues={editing}
           enableReinitialize
         >
           {formProps => {
@@ -118,17 +143,12 @@ export default function(props) {
                 <Table
                   columns={columns}
                   data={invitations}
-                  defaultPageSize={5}
+                  showPagination={false}
                 />
-                <button type="submit">Submit</button>
               </form>
             )
           }}
         </FormProvider>
       </React.Fragment>
     );
-  } catch(error){
-    console.log(error);
-  }
-
 }

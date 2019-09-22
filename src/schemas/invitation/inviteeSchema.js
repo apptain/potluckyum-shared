@@ -21,7 +21,16 @@ export default () => {
       "email": {
         "type": "string",
         "title": "Email"
+      },
+      "message": {
+        "type": "string",
+        "title": "Message"
+      },
+      "status": {
+        "type": "string",
+        "enum": ["new", "sent", "confirmed", "declined"]
       }
     }
   };
 };
+

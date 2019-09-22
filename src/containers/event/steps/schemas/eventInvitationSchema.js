@@ -9,9 +9,13 @@ export default () => {
         "type": "string",
         "title": "Name"
       },
-      "phoneNumberOrEmail": {
+      "email": {
         "type": "string",
-        "title": "Phone Number or Email"
+        "title": "Email"
+      },
+      "phoneNumber": {
+        "type": "string",
+        "title": "Phone Number"
       },
       "message": {
         "type": "string",

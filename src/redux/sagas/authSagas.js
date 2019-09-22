@@ -26,5 +26,5 @@ function* watchLoginRequest() {
 }
 
 export default [
-  watchLoginRequest(),
+  //watchLoginRequest(),
 ];

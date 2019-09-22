@@ -26,5 +26,5 @@ function* watchEventCreateRequest() {
 }
 
 export default [
-  watchEventCreateRequest(),
+  //watchEventCreateRequest(),
 ];

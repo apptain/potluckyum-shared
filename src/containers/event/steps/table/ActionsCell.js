@@ -1,21 +1,22 @@
 import React from "react";
-import Button from 'muicss/lib/react/button';
+
+import { MdDone, MdPersonAdd, MdCancel } from 'react-icons/md';
 
 const editModes = {
   view: props => (
-    <Button onClick={props.onEdit}>
+    <MdDone onClick={props.onEdit}>
       Edit
-    </Button>
+    </MdDone>
   ),
   edit: props => (
     <React.Fragment>
-      <Button type="submit">
+      <MdDone type="submit">
         Save
-      </Button>
+      </MdDone>
 
-      <Button onClick={props.onCancel}>
+      <MdDone onClick={props.onCancel}>
         Cancel
-      </Button>
+      </MdDone>
     </React.Fragment>
   )
 };
@@ -25,6 +26,6 @@ export default function ActionsCell(props) {
     mode,
     actions: { onEdit, onCancel }
   } = props.columnProps.rest;
-  const Buttons = editModes[mode];
-  return <Buttons onEdit={() => onEdit(props.index)} onCancel={onCancel} />;
+  const MdDones = editModes[mode];
+  return <MdDones onEdit={() => onEdit(props.index)} onCancel={onCancel} />;
 }
