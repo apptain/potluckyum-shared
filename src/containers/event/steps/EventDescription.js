@@ -11,7 +11,8 @@ export default function EventDescription(props) {
   const handleSubmit = ({formData}) => {
     debugger;
     const event = Object.assign(props.event, formData);
-    props.jumpToStep(1);
+    props.eventUpdate(event);
+    //props.jumpToStep(1);
 
     // this.setState({ isLoading: true });
     //
@@ -26,16 +27,15 @@ export default function EventDescription(props) {
     // }
   }
 
+  debugger;
   return (
     <div>
       <Form
         safeRenderCompletion={true}
-        //formContext={this.state.doc}
         schema={eventDescriptionSchema()}
-        //formData={ doc }
+        formData={ props.event }
+        onChange={props.onChange}
         uiSchema={eventDescriptionUISchema()}
-        //validate={this.props.validate}
-        //onChange={docChangeDebounced}
         onSubmit={handleSubmit}
         widgets={formWidgets}
         FieldTemplate={CustomFieldTemplate}

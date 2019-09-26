@@ -30,12 +30,10 @@ export default function EventLocation(props) {
     <div>
       <Form
         safeRenderCompletion={true}
-        //formContext={this.state.doc}
         schema={eventLocationSchema()}
-        //formData={ doc }
         uiSchema={eventLocationUISchema()}
-        //validate={this.props.validate}
-        //onChange={docChangeDebounced}
+        formData={ props.event }
+        onChange={props.onChange}
         onSubmit={handleSubmit}
         widgets={formWidgets}
         FieldTemplate={CustomFieldTemplate}

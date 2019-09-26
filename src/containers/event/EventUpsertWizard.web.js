@@ -1,8 +1,11 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { Action, withStateMachine } from 'react-automata';
+import { StateNode, interpret } from 'xstate';
 import withStyles from '@material-ui/styles/withStyles';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
+import debounce from 'debounce';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -22,8 +25,12 @@ import EventDateTime from './steps/EventDateTime';
 import EventInvitations from './steps/EventInvitations';
 import EventRequests from './steps/EventRequests';
 
+//import eventMachine from '../../statemachine/e';
+import configureMachine, {CREATE, UPDATE, CHANGE} from '../../statemachine/events';
+
 const numeral = require('numeral');
 numeral.defaultFormat('0,000');
+
 
 const styles = theme => ({
   root: {
@@ -95,15 +102,43 @@ const styles = theme => ({
 
 @connect(state => ({ event: state.events.selectedEvent }), dispatch => ({actions: bindActionCreators({eventChange, eventCreate, eventUpdate}, dispatch)}))
 class Wizard extends Component {
-  eventUpdate(event) {
-    debugger;
-    this.props.actions.eventChange(event);
-    //this.props.jumpToStep(2);
+  constructor(props) {
+    super(props);
 
+    this.machine =  configureMachine();
+    // debugger;
+    this.state = this.machine.context;
+    this.service = interpret(this.machine).onTransition(
+      this.handleMachineTransition
+    );
+    //defaulting to create until edit wired up
+    this.service.send({
+      type: CREATE
+    });
+  }
+
+  handleMachineTransition = ({context}) => {
+    debugger;
+    // this.props.logState(currentState);
+    this.setState({ context });
+  };
+
+  eventCreate(event) {
+    this.service.send({
+      type: CHANGE,
+      event
+    });
+    // this.props.transition("CHANGE");
+    //this.props.actions.eventChange(event);
+    //this.props.jumpToStep(2);
   }
 
   componentDidMount() {
+    this.service.start();
+  }
 
+  componentWillUnmount() {
+    this.service.stop();
   }
 
   handleNext = () => {
@@ -114,17 +149,43 @@ class Wizard extends Component {
 
   };
 
+  eventChange = ({formData}) => {
+    debugger;
+    this.service.send({
+      type: CHANGE,
+      //we
+      changes: formData
+    });
+  };
+
+  invitationChange = ({formData}) => {
+    debugger;
+  };
+
   render() {
     const { classes } = this.props;
 
-    const event = this.props.event;
+    function debounceEventHandler(...args) {
+      const debounced = debounce(...args)
+      return function (e) {
+        return debounced(e)
+      }
+    }
+
+    const event = this.state.selectedEvent;
+    debugger;
+
+    //300 millisecond delay for debounce
+    const eventChangeDebounced = debounceEventHandler(this.eventChange, 300);
+    const invitationChangeDebounced = debounceEventHandler(this.invitationChange, 300);
+
     const steps =
       [
-        {name: 'Invitations', component: <EventInvitations event={event} eventUpdate={(formData) => {this.eventUpdate(formData)}} />},
-        {name: 'Description', component: <EventDescription event={event} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />},
-        {name: 'Location', component: <EventLocation event={event} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />},
-        {name: 'Date Time', component: <EventDateTime event={event} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />},
-        {name: 'Requests', component: <EventRequests event={event} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />}
+        {name: 'Description', component: <EventDescription event={event} onChange={eventChangeDebounced} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />},
+        {name: 'Invitations', component: <EventInvitations event={event} invitationChange={eventChangeDebounced} eventUpdate={(formData) => {this.eventUpdate(formData)}} />},
+        {name: 'Location', component: <EventLocation event={event} onChange={eventChangeDebounced} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />},
+        {name: 'Date Time', component: <EventDateTime event={event} onChange={eventChangeDebounced} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />},
+        {name: 'Requests', component: <EventRequests event={event} onChange={eventChangeDebounced} eventUpdate={(formData) => {this.eventUpdate(formData)}}  />}
       ];
 
     return (
@@ -184,4 +245,3 @@ class Wizard extends Component {
 }
 
 export default withRouter(withStyles(styles)(Wizard));
-

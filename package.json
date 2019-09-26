@@ -51,7 +51,8 @@
 		"rjsf-material-ui": "^0.3.6",
 		"styled-components": "^4.3.2",
 		"styled-system": "^5.1.2",
-		"tinymce": "^5.0.15"
+		"tinymce": "^5.0.15",
+		"xstate": "^4.6.7"
 	},
 	"devDependencies": {
 		"babel-eslint": "^10.0.3",

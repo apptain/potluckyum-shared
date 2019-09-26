@@ -31,12 +31,10 @@ export default function EventDateTime(props) {
     <div>
       <Form
         safeRenderCompletion={true}
-        //formContext={this.state.doc}
+        formData={ props.event }
+        onChange={props.onChange}
         schema={eventDateTimeSchema()}
-        //formData={ doc }
         uiSchema={eventDateTimeUISchema()}
-        //validate={this.props.validate}
-        //onChange={docChangeDebounced}
         onSubmit={handleSubmit}
         widgets={widgets}
         FieldTemplate={CustomFieldTemplate}

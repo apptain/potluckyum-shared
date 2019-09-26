@@ -31,12 +31,10 @@ export default function EventRequests(props) {
     <div>
       <Form
         safeRenderCompletion={true}
-        //formContext={this.state.doc}
         schema={eventRequestsSchema()}
-        //formData={ doc }
         uiSchema={eventRequestsUISchema()}
-        //validate={this.props.validate}
-        //onChange={docChangeDebounced}
+        formData={ props.event }
+        onChange={props.onChange}
         onSubmit={handleSubmit}
         widgets={formWidgets}
         FieldTemplate={CustomFieldTemplate}
