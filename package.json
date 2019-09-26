@@ -9,6 +9,7 @@
 		"@material-ui/icons": "^4.2.0",
 		"@material-ui/lab": "^4.0.0-alpha.16",
 		"@material-ui/styles": "^4.0.0",
+		"@xstate/react": "^0.7.1",
 		"aws-amplify": "^1.1.40",
 		"debounce": "^1.2.0",
 		"faker": "^4.1.0",

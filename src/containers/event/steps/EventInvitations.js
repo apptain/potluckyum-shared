@@ -25,7 +25,6 @@ export default function(props) {
   const [editing, setEditing] = useState(null);
   const [eventFormModalIsOpen, eventFormModalToggle ] = useState(false);
 
-
   const toggleModal = event => {
     eventFormModalToggle(!eventFormModalIsOpen);
   }

@@ -17,18 +17,21 @@ export const EVENT_DELETE_SUCCESS = 'potluckyum/events/EVENT_DELETE_SUCCESS';
 export const EVENT_DELETE_FAIL = 'potluckyum/events/EVENT_DELETE_FAIL';
 
 const initialState = {
-  selectedEvents: [],
   selectedEvent: {},
+  selectedInvitation: {},
+  unsavedChanges: {},
+  validationErrors: [],
   eventUpdating: false,
   eventGetting: false,
-  eventsGetting: false
+  invitationSending: {},
+  invitationSendingResult: {}
 }
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case EVENT_CHANGE:
       debugger;
-      return {...state, selectedEvent: action.event};
+      return {...state, selectedEvent: action.selectedEvent};
     case EVENTS_LIST:
       return {...state, selectedEvents: [], eventsGetting: true};
     case EVENTS_LIST_SUCCESS:

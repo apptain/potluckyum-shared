@@ -1,4 +1,3 @@
-import React, {useM}
 import { Machine, assign } from 'xstate';
 
 //actions
@@ -27,6 +26,8 @@ export const UPDATE = '@state/UPDATE';
 export const DELETE = '@state/DELETE';
 export const CHANGE = '@state/CHANGE';
 
+import {EVENT_CHANGE} from '../modules/events';
+
 const initialContext = {
   selectedEvent: {},
   selectedInvitation: {},
@@ -38,11 +39,15 @@ const initialContext = {
   invitationSendingResult: {}
 };
 
-const actions = {
-  eventChange: (ctx, { changes }) =>  assign({
-    eventUpdating: true,
-    selectedEvent: {...ctx.selectedEvent, ...changes}
-  }),
+export const actions = {
+  eventChange: (ctx, { changes }) =>
+  {
+    debugger;
+    return {
+      type: EVENT_CHANGE,
+      selectedEvent: {...ctx.selectedEvent, ...changes}
+    }
+  },
   eventGet: (id) => {
     return {type: eventGet, id};
   },
@@ -80,12 +85,10 @@ const flowMachine = Machine({
         [CREATE]: {
           target: eventCreate,
           cond: 'shouldCreateNewEvent',
-          actions: 'updateCtxWithAnswer'
         },
         [UPDATE]: {
           target: eventUpdate,
           cond: 'shouldCreateNewEvent',
-          actions: 'updateCtxWithAnswer'
         }
       }
     },
@@ -105,9 +108,7 @@ const flowMachine = Machine({
 const configureMachine = (context = initialContext) =>
   flowMachine
     .withConfig({
-      actions,
       guards
-    })
-    .withContext(context);
+    });
 
 export default configureMachine;
