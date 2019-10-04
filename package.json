@@ -16,6 +16,7 @@
 		"history": "^4.10.1",
 		"immer": "^4.0.0",
 		"jquery": "^3.4.1",
+		"json-predicate": "^0.9.5",
 		"lodash": "^4.17.15",
 		"material-ui": "^0.20.2",
 		"muicss": "^0.9.43",
@@ -61,7 +62,8 @@
 		"eslint-config-airbnb": "^18.0.1",
 		"eslint-plugin-import": "^2.18.2",
 		"eslint-plugin-jsx-a11y": "^6.2.3",
-		"eslint-plugin-react": "^7.14.3"
+		"eslint-plugin-react": "^7.14.3",
+		"less-loader": "^5.0.0"
 	},
 	"peerDependencies": {
 		"react-native": "*",

@@ -79,7 +79,7 @@ export default function(props) {
 
   const handleSubmit = ({formData}) => {
     debugger;
-    const event = props.event;
+    const event = props.selectedEvent;
     if(!event.invitations) {
       event.invitations = [];
     }
@@ -89,17 +89,16 @@ export default function(props) {
     });
     invitations.push(formData);
     event.invitations = invitations;
-    props.eventUpdate(event);
+    props.selectedEventUpdate(event);
     //props.jumpToStep(1);
   };
 
-  let invitations = props.event.invitations || [];
+  let invitations = props.selectedEvent.invitations || [];
   invitations = invitations.filter(function(item){
     return !!item;
   });
 
   const { classes } = props;
-
 
   return (
       <React.Fragment>
@@ -111,12 +110,11 @@ export default function(props) {
             {eventFormModalIsOpen &&
               <Form
                 safeRenderCompletion={true}
+                formData={ props.selectedInvitation }
                 schema={eventInvitationSchema()}
-                //formData={ doc }
                 uiSchema={eventInvitationUISchema()}
-                //validate={this.props.validate}
-                //onChange={docChangeDebounced}
-                onSubmit={handleSubmit}
+                onChange={props.invitation}
+                //onSubmit={handleSubmit}
                 widgets={formWidgets}
                 FieldTemplate={CustomFieldTemplate}
               >
@@ -131,7 +129,7 @@ export default function(props) {
 
         <FormProvider
           form="inline"
-          onSubmit={handleSubmit}
+          //onSubmit={handleSubmit}
           //onSubmitSuccess={() => setState({ editing: null })}
           initialValues={editing}
           enableReinitialize

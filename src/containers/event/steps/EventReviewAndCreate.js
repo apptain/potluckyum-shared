@@ -3,16 +3,16 @@ import formWidgets from "../../../schemaform/widgets";
 import CustomFieldTemplate from "../../../schemaform/customFieldTemplate";
 
 import Form from "react-jsonschema-form";
-import eventRequestsSchema from "./schemas/eventRequestsSchema";
-import eventRequestsUISchema from "./schemas/eventRequestsUISchema";
+import eventLocationSchema from "./schemas/eventLocationSchema";
+import eventLocationUISchema from "./schemas/eventLocationUISchema";
 
-export default function EventRequests(props) {
+export default function EventLocation(props) {
   return (
     <div>
       <Form
         safeRenderCompletion={true}
-        schema={eventRequestsSchema()}
-        uiSchema={eventRequestsUISchema()}
+        schema={eventLocationSchema()}
+        uiSchema={eventLocationUISchema()}
         formData={ props.selectedEvent }
         onChange={props.selectedEventChange}
         //onSubmit={handleSubmit}
@@ -27,4 +27,4 @@ export default function EventRequests(props) {
   );
 }
 
-//export default EventRequests;
+//export default EventLocation;

@@ -19,7 +19,7 @@ const validate = values => {
 const MaterialUiForm = props => {
   const { handleSubmit, pristine, reset, submitting } = props
   return (
-    <form onSubmit={handleSubmit}>
+    <form //onSubmit={handleSubmit}>
       <div>
         <Field name="firstName" component={firstName =>
           <TextField hintText = "First Name"

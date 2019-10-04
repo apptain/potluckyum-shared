@@ -1,4 +1,5 @@
 export const EVENT_CHANGE = 'potluckyum/events/EVENT_CHANGE';
+export const INVITATION_CHANGE = 'potluckyum/events/EVENT_CHANGE';
 
 export const EVENTS_LIST = 'potluckyum/events/EVENTS_LIST';
 export const EVENTS_LIST_SUCCESS = 'potluckyum/events/EVENTS_LIST_SUCCESS';
@@ -32,6 +33,9 @@ export default function reducer(state = initialState, action = {}) {
     case EVENT_CHANGE:
       debugger;
       return {...state, selectedEvent: action.selectedEvent};
+    case INVITATION_CHANGE:
+      debugger;
+      return {...state, selectedInvitation: action.selectedInvitation};
     case EVENTS_LIST:
       return {...state, selectedEvents: [], eventsGetting: true};
     case EVENTS_LIST_SUCCESS:

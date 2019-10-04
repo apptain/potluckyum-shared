@@ -9,36 +9,26 @@ import eventDateTimeUISchema from "./schemas/eventDateTimeUISchema";
 export default function EventDateTime(props) {
 
   const handleSubmit = ({formData}) => {
-    debugger;
-    //event.preventDefault();
-    props.eventUpdate(formData);
+    props.selectedEventUpdate(formData);
     props.jumpToStep(1);
-
-    // this.setState({ isLoading: true });
-    //
-    // try {
-    //   await this.createEvent({
-    //     content: this.state.content
-    //   });
-    //   this.props.history.push("/");
-    // } catch (e) {
-    //   alert(e);
-    //   this.setState({ isLoading: false });
-    // }
   }
 
   return (
     <div>
       <Form
         safeRenderCompletion={true}
-        formData={ props.event }
-        onChange={props.onChange}
+        formData={ props.selectedEvent }
+        onChange={props.selectedEventChange}
         schema={eventDateTimeSchema()}
         uiSchema={eventDateTimeUISchema()}
-        onSubmit={handleSubmit}
+        //onSubmit={handleSubmit}
         widgets={widgets}
         FieldTemplate={CustomFieldTemplate}
-      />
+      >
+        <div>
+          {/*empty div hides submit button in rsjf*/}
+        </div>
+      </Form>
     </div>
   );
 }

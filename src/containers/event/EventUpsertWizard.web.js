@@ -7,14 +7,14 @@ import withStyles from '@material-ui/styles/withStyles';
 import { withRouter } from 'react-router-dom';
 import debounce from 'debounce';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-
-
-// import { eventChange, eventCreate, eventUpdate } from '../../redux/modules/events';
+import styles from './styles';
 
 import StepZilla from 'react-stepzilla';
+import StepButtons from '../../components/StepButtons';
+
 import EventDescription from './steps/EventDescription';
 import EventLocation from './steps/EventLocation';
 import EventDateTime from './steps/EventDateTime';
@@ -22,98 +22,32 @@ import EventInvitations from './steps/EventInvitations';
 import EventRequests from './steps/EventRequests';
 
 import configureMachine, {CREATE, UPDATE, CHANGE, actions} from '../../redux/statemachine/events';
-
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.primary['A100'],
-    overflow: 'hidden',
-    //background: `url(${backgroundShape}) no-repeat`,
-    backgroundSize: 'cover',
-    backgroundPosition: '0 400px',
-    marginTop: 10,
-    padding: 20,
-    paddingBottom: 200
-  },
-  grid: {
-    margin: `0 ${theme.spacing(2)}px`
-  },
-  smallContainer: {
-    width: '60%'
-  },
-  bigContainer: {
-    width: '80%'
-  },
-  stepContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  stepGrid: {
-    width: '80%'
-  },
-  backButton: {
-    marginRight: theme.spacing(1),
-  },
-  outlinedButtom: {
-    textTransform: 'uppercase',
-    margin: theme.spacing(1)
-  },
-  stepper: {
-    backgroundColor: 'transparent'
-  },
-  paper: {
-    padding: theme.spacing(3),
-    textAlign: 'left',
-    color: theme.palette.text.secondary
-  },
-  topInfo: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 42
-  },
-  formControl: {
-    width: '100%'
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  borderColumn: {
-    borderBottom: `1px solid ${theme.palette.grey['100']}`,
-    paddingBottom: 24,
-    marginBottom: 24
-  },
-  flexBar: {
-    marginTop: 32,
-    display: 'flex',
-    justifyContent: 'center'
-  }
-})
-
-// @connect(state => ({ event: }), dispatch => ({actions: bindActionCreators({eventChange, eventCreate, eventUpdate}, dispatch)}))
+import Button from "@material-ui/core/Button";
 
 const EventUpsertWizardContainer = (props) => {
+  //classes injected with theme
   const {classes} = props;
+
   //redux wire up
-  const selectedEvent = useSelector(state => {debugger; return state.events.selectedEvent}) || {};
-  debugger;
+  const eventsState = useSelector(state => { return state.events});
+
   const dispatch = useDispatch();
   const machine =  configureMachine();
 
   const [state, send] = useMachine(machine, {
     context: {
-      selectedEvent
+      eventsState
     },
     actions: {
-      eventChange: (context, e) => dispatch(actions.eventChange(context, e))
+      selectedEventChange: (context, e) => dispatch(actions.selectedEventChange(context, e))
     }
   })
 
+  //initializes statechart state to CREATE from READY
   send({
     type: CREATE
   });
+
 
   // useEffect(() => {
   //   start();
@@ -128,8 +62,52 @@ const EventUpsertWizardContainer = (props) => {
   //   setState({ context });
   // };
 
-  const handleBack = () => {
+  const debounceEventHandler = (...args) => {
+    const debounced = debounce(...args)
+    return function (e) {
+      return debounced(e)
+    }
+  };
 
+  //300 millisecond delay for debounce
+  const selectedEventChangeDebounced = debounceEventHandler(selectedEventChange, 300);
+  const invitationChangeDebounced = debounceEventHandler(invitationChange, 300);
+
+  //Cancel Previous Review and Launch Next: Configure Instance Details
+
+  const wizardActions = {
+    //back and next handled in container, but could move to statecharts
+    back: (step, jumpToStep) => {
+      jumpToStep(step - 1);
+    },
+    next: (step, jumpToStep) => {
+      jumpToStep(step + 1);
+    },
+    //below are handled in statechart
+    cancel: () => {
+      send({
+        type: CHANGE,
+        event
+      });
+    },
+    review: () => {
+      send({
+        type: CHANGE,
+        event
+      });
+    },
+    create: () => {
+      send({
+        type: CHANGE,
+        event
+      });
+    },
+    update: () => {
+      send({
+        type: CHANGE,
+        event
+      });
+    }
   };
 
   const eventCreate = (event) => {
@@ -139,38 +117,34 @@ const EventUpsertWizardContainer = (props) => {
     });
   };
 
-  const eventChange = ({formData}) => {
+  const selectedEventChange = ({formData}) => {
     send({
       type: CHANGE,
-      //we
       changes: formData
     });
   };
 
   const invitationChange = ({formData}) => {
-    debugger;
+    send({
+      type: CHANGE,
+      changes: formData
+    });
   };
 
-  const debounceEventHandler = (...args) => {
-    const debounced = debounce(...args)
-    return function (e) {
-      return debounced(e)
-    }
-  };
+  const { selectedEvent, selectedInvitation } = eventsState;
 
-  //300 millisecond delay for debounce
-  const eventChangeDebounced = debounceEventHandler(eventChange, 300);
-  const invitationChangeDebounced = debounceEventHandler(invitationChange, 300);
-
+  //TODO remove stepzilla dependency and improve wizard
   const steps =
   [
-    {name: 'Description', component: <EventDescription event={selectedEvent} onChange={eventChangeDebounced} eventUpdate={(formData) => {eventUpdate(formData)}}  />},
-    {name: 'Invitations', component: <EventInvitations event={selectedEvent} invitationChange={eventChangeDebounced} eventUpdate={(formData) => {eventUpdate(formData)}} />},
-    {name: 'Location', component: <EventLocation event={selectedEvent} onChange={eventChangeDebounced} eventUpdate={(formData) => {eventUpdate(formData)}}  />},
-    {name: 'Date Time', component: <EventDateTime event={selectedEvent} onChange={eventChangeDebounced} eventUpdate={(formData) => {eventUpdate(formData)}}  />},
-    {name: 'Requests', component: <EventRequests event={selectedEvent} onChange={eventChangeDebounced} eventUpdate={(formData) => {eventUpdate(formData)}}  />}
+    {name: 'Description', component: <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+    {name: 'Location', component: <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+    {name: 'Date Time', component: <EventDateTime index={2} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+    {name: 'Invitations', component: <EventInvitations index={3}   classes={classes} selectedEvent={selectedEvent} selectedInvitation={selectedInvitation} selectedEventChange={selectedEventChangeDebounced} invitationChange={invitationChangeDebounced} />},
+    {name: 'Requests', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+    {name: 'Review and Launch', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />}
   ];
 
+  //TODO clear up gridlock...
   return (
     <React.Fragment>
       <CssBaseline />
@@ -178,44 +152,38 @@ const EventUpsertWizardContainer = (props) => {
         <Grid container justify="center">
           <Grid alignItems="center" justify="center" container className={classes.grid}>
             <Grid item xs={12}>
-              <div className={classes.stepContainer}>
-                <div className={classes.bigContainer}>
-                    <Paper className={classes.paper}>
-                      <Grid item container xs={12}>
-                        <Grid item xs={12}>
-                          <StepZilla
-                            steps={steps}
-                            showNavigation={false}
-                            prevBtnOnLastStep={false}
-                            preventEnterSubmission={true}
-                            nextTextOnFinalActionStep={"Save"}
-                            hocValidationAppliedTo={[3]}
-                            startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
-                            onStepChange={(step) => window.sessionStorage.setItem('step', step)}
-                          />
-                        </Grid>
-                        <div className={classes.flexBar}>
-                          <Button
-                            // disabled={activeStep === 0}
-                            onClick={handleBack}
-                            className={classes.backButton}
-                            size='large'
-                          >
-                            Back
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            // onClick={activeStep !== 5 ? handleNext : goToDashboard}
-                            size='large'
-                            // disabled={state.activeStep === 3 && !state.termsChecked}
-                          >
-                          </Button>
-                        </div>
-                      </Grid>
-                    </Paper>
-                  </div>
-              </div>
+              <Paper className={classes.paper}>
+                <Grid item container xs={12}>
+                  <Grid item xs={12}>
+                    <StepZilla
+                      steps={steps}
+                      showNavigation={false}
+                      prevBtnOnLastStep={false}
+                      preventEnterSubmission={true}
+                    />
+                    <Box
+                      bgcolor="background.paper"
+                      color="text.primary"
+                      p={2}
+                      position="absolute"
+                      bottom={0}
+                      left="10%"
+                      zIndex="modal"
+                    >
+                      <StepButtons
+                        selectedIndex={eventsState.selectedWizardIndex}
+                        classes={classes}
+                        back={wizardActions.back}
+                        next={wizardActions.next}
+                        cancel={wizardActions.cancel}
+                        review={wizardActions.review}
+                        create={wizardActions.create}
+                        update={wizardActions.update}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Paper>
             </Grid>
           </Grid>
         </Grid>

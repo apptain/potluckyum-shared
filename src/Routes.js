@@ -21,7 +21,6 @@ export default ({ childProps }) =>
       <AppliedRoute path="/" exact component={Home} props={childProps} />
       <UnauthenticatedRoute path="/login" exact component={Login} props={childProps} />
       <UnauthenticatedRoute path="/signup" exact component={Signup} props={childProps} />
-      <AuthenticatedRoute path='/wizard' exact component={ Wizard } props={childProps}/>
       <AuthenticatedRoute path="/potluck" exact component={EventUpsertWizard} props={childProps} />
       <AuthenticatedRoute path="/settings" exact component={Settings} props={childProps} />
     </BrowserRouter>

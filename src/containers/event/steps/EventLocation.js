@@ -8,36 +8,22 @@ import eventLocationUISchema from "./schemas/eventLocationUISchema";
 
 export default function EventLocation(props) {
 
-  const handleSubmit = ({formData}) => {
-    //event.preventDefault();
-    props.eventUpdate(formData);
-    props.jumpToStep(1);
-
-    // this.setState({ isLoading: true });
-    //
-    // try {
-    //   await this.createEvent({
-    //     content: this.state.content
-    //   });
-    //   this.props.history.push("/");
-    // } catch (e) {
-    //   alert(e);
-    //   this.setState({ isLoading: false });
-    // }
-  }
-
   return (
     <div>
       <Form
         safeRenderCompletion={true}
         schema={eventLocationSchema()}
         uiSchema={eventLocationUISchema()}
-        formData={ props.event }
-        onChange={props.onChange}
-        onSubmit={handleSubmit}
+        formData={ props.selectedEvent }
+        onChange={props.selectedEventChange}
+        //onSubmit={handleSubmit}
         widgets={formWidgets}
         FieldTemplate={CustomFieldTemplate}
-      />
+      >
+        <div>
+          {/*empty div hides submit button in rsjf*/}
+        </div>
+      </Form>
     </div>
   );
 }

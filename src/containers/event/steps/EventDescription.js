@@ -5,43 +5,27 @@ import CustomFieldTemplate from "../../../schemaform/customFieldTemplate";
 import Form from "react-jsonschema-form";
 import eventDescriptionSchema from "./schemas/eventDescriptionSchema";
 import eventDescriptionUISchema from "./schemas/eventDescriptionUISchema";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 
 export default function EventDescription(props) {
 
-  const handleSubmit = ({formData}) => {
-    debugger;
-    const event = Object.assign(props.event, formData);
-    props.eventUpdate(event);
-    //props.jumpToStep(1);
-
-    // this.setState({ isLoading: true });
-    //
-    // try {
-    //   await this.createEvent({
-    //     content: this.state.content
-    //   });
-    //   this.props.history.push("/");
-    // } catch (e) {
-    //   alert(e);
-    //   this.setState({ isLoading: false });
-    // }
-  }
-
-  debugger;
   return (
-    <div>
+    <Grid>
       <Form
         safeRenderCompletion={true}
         schema={eventDescriptionSchema()}
-        formData={ props.event }
-        onChange={props.onChange}
+        formData={props.selectedEvent}
+        onChange={props.selectedEventChange}
         uiSchema={eventDescriptionUISchema()}
-        onSubmit={handleSubmit}
+        //onSubmit={handleSubmit}
         widgets={formWidgets}
         FieldTemplate={CustomFieldTemplate}
-      />
-    </div>
+      >
+        <div>
+          {/*empty div hides submit button in rsjf*/}
+        </div>
+      </Form>
+    </Grid>
   );
 }
-
-//export default EventDescription;

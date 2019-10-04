@@ -1,45 +1,5 @@
 import { Machine, assign } from 'xstate';
 
-//actions
-export const ready = '@state/READY';
-export const eventCreate = '@state/EVENT_CREATE';
-export const eventUpdate = '@state/EVENT_UPDATE';
-
-export const eventGet = '@state/EVENT_GET';
-export const eventGetSuccess = '@state/EVENT_GET_SUCCESS';
-export const eventGetFail = '@state/EVENT_GET_FAIL';
-
-export const eventCreatePersist = '@state/EVENT_CREATE_PERSIST';
-export const eventCreatePersistSuccess = '@state/EVENT_CREATE_PERSIST_SUCCESS';
-export const eventCreatePersistFail = '@state/EVENT_CREATE_PERSIST_FAIL';
-
-export const eventUpdatePersist = '@state/EVENT_UPDATE_PERSIST';
-export const eventUpdatePersistSuccess = '@state/EVENT_UPDATE_PERSIST_SUCCESS';
-export const eventUpdatePersistFail = '@state/EVENT_UPDATE_PERSIST_FAIL';
-
-export const invitationSend = '@state/EVENT_PERSIST';
-export const invitationSendSuccess = '@state/INVITATION_SEND_SUCCESS';
-export const invitationSendFailure = '@state/INVITATION_SEND_FAIL';
-
-export const CREATE = '@state/CREATE';
-export const UPDATE = '@state/UPDATE';
-export const DELETE = '@state/DELETE';
-export const CHANGE = '@state/CHANGE';
-
-import {EVENT_CHANGE} from '../modules/events';
-
-const initialContext = {
-  selectedEvent: {},
-  selectedInvitation: {},
-  unsavedChanges: {},
-  validationErrors: [],
-  eventUpdating: false,
-  eventGetting: false,
-  invitationSending: {},
-  invitationSendingResult: {},
-  selectedWizardIndex: 0
-};
-
 export const actions = {
   eventChange: (ctx, { changes }) =>
   {
