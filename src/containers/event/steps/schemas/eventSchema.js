@@ -23,9 +23,14 @@ export default () => {
         "title": "End Date and Time",
         "format": "date-time"
       },
+      "startTime": {
+        "type": "string",
+        "title": "Start Time",
+        "format": "date-time"
+      },
       "endTime": {
         "type": "string",
-        "title": "End Date and Time",
+        "title": "End Time",
         "format": "date-time"
       },
       "location": {
@@ -55,6 +60,7 @@ export default () => {
           "type": "string"
         }
       },
+
     }
   };
 };

@@ -1,34 +1,5 @@
 import { Machine, assign } from 'xstate';
 
-export const actions = {
-  eventChange: (ctx, { changes }) =>
-  {
-    return {
-      type: EVENT_CHANGE,
-      selectedEvent: {...ctx.selectedEvent, ...changes}
-    }
-  },
-  invitationChange: (ctx, { changes }) =>
-  {
-    return {
-      type: EVENT_CHANGE,
-      selectedEvent: {...ctx.selectedEvent, ...changes}
-    }
-  },
-  eventGet: (id) => {
-    return {type: eventGet, id};
-  },
-  eventCreatePersist: (event) => {
-    return {type: eventCreatePersist, event};
-  },
-  eventUpdatePersist: (event) => {
-    return {type: eventCreatePersist, event};
-  },
-  invitationSend: () => {
-    return {type: invitationSend, id};
-  }
-}
-
 const guards = {
   shouldCreateNewEvent: (ctx, event) => {
     //TODO
@@ -47,7 +18,7 @@ const guards = {
 const flowMachine = Machine({
   initial: ready,
   states: {
-    [ready]: {
+    []: {
       on: {
         [CREATE]: {
           target: eventCreate,

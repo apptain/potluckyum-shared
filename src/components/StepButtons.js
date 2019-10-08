@@ -54,7 +54,7 @@ const StepButtons = (props) => {
   );
 }
 
-StepButtons.PropTypes = {
+StepButtons.propTypes = {
   selectedIndex: PropTypes.number.isRequired,
   back: PropTypes.func.isRequired,
   next: PropTypes.func.isRequired,

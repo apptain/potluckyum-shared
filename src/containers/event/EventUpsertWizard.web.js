@@ -6,6 +6,10 @@ import { useMachine } from '@xstate/react';
 import withStyles from '@material-ui/styles/withStyles';
 import { withRouter } from 'react-router-dom';
 import debounce from 'debounce';
+import { Wizard, Step } from 'react-redux-wizard';
+
+import Stepper from '@material-ui/core/Stepper';
+import StepLabel from '@material-ui/core/StepLabel';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -13,6 +17,8 @@ import Paper from '@material-ui/core/Paper';
 import styles from './styles';
 
 import StepZilla from 'react-stepzilla';
+import {default as MaterialStep} from '@material-ui/core/Step';
+
 import StepButtons from '../../components/StepButtons';
 
 import EventDescription from './steps/EventDescription';
@@ -30,6 +36,10 @@ const EventUpsertWizardContainer = (props) => {
 
   //redux wire up
   const eventsState = useSelector(state => { return state.events});
+  const wizardsState = useSelector(state => { debugger; return state.wizards});
+
+  const selectedWizardIndex = Object.getOwnPropertyNames(wizardsState.EventWizard.steps).findIndex(p => p == wizardsState.EventWizard.currentStep);
+  debugger;
 
   const dispatch = useDispatch();
   const machine =  configureMachine();
@@ -133,20 +143,30 @@ const EventUpsertWizardContainer = (props) => {
 
   const { selectedEvent, selectedInvitation } = eventsState;
 
-  //TODO remove stepzilla dependency and improve wizard
-  const steps =
-  [
-    {name: 'Description', component: <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-    {name: 'Location', component: <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-    {name: 'Date Time', component: <EventDateTime index={2} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-    {name: 'Invitations', component: <EventInvitations index={3}   classes={classes} selectedEvent={selectedEvent} selectedInvitation={selectedInvitation} selectedEventChange={selectedEventChangeDebounced} invitationChange={invitationChangeDebounced} />},
-    {name: 'Requests', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-    {name: 'Review and Launch', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />}
-  ];
+  // //TODO remove stepzilla dependency and improve wizard
+  // const steps =
+  // [
+  //   {name: 'Description', component: <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+  //   {name: 'Location', component: <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+  //   {name: 'Date Time', component: <EventDateTime index={2} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+  //   {name: 'Invitations', component: <EventInvitations index={3}   classes={classes} selectedEvent={selectedEvent} selectedInvitation={selectedInvitation} selectedEventChange={selectedEventChangeDebounced} invitationChange={invitationChangeDebounced} />},
+  //   {name: 'Requests', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
+  //   {name: 'Review and Launch', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />}
+  // ];
+
+  const EventDescriptionStep = () => <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
+  const EventLocationStep = () => <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
+  const EventDateTimeStep = () => <EventDateTime index={2} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
+  const EventInvitationsStep = () => <EventInvitations index={3} classes={classes} selectedEvent={selectedEvent} selectedInvitation={selectedInvitation} selectedEventChange={selectedEventChangeDebounced} invitationChange={invitationChangeDebounced} />;
+  const EventRequestsStep = () => <EventRequests index={4} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
+  const EventReviewAndCreateStep = () => <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />;
+
+
 
   //TODO clear up gridlock...
   return (
     <React.Fragment>
+
       <CssBaseline />
       <div className={classes.root}>
         <Grid container justify="center">
@@ -155,12 +175,36 @@ const EventUpsertWizardContainer = (props) => {
               <Paper className={classes.paper}>
                 <Grid item container xs={12}>
                   <Grid item xs={12}>
-                    <StepZilla
-                      steps={steps}
-                      showNavigation={false}
-                      prevBtnOnLastStep={false}
-                      preventEnterSubmission={true}
-                    />
+                    {/*TODO custom wizard*/}
+                    <Stepper activeStep={selectedWizardIndex}>
+                      <MaterialStep key="description">
+                        Description
+                      </MaterialStep>
+                      <MaterialStep key="location">
+                        <StepLabel>Location</StepLabel>
+                      </MaterialStep>
+                      <MaterialStep key="dateTime">
+                        <StepLabel>Date Time</StepLabel>
+                      </MaterialStep>
+                      <MaterialStep key="eventInvitations">
+                        <StepLabel>Invitations</StepLabel>
+                      </MaterialStep>
+                      <MaterialStep key="requests">
+                        <StepLabel>Requests</StepLabel>
+                      </MaterialStep>
+                      <MaterialStep key="reviewAndCreate">
+                        <StepLabel>Review and Create</StepLabel>
+                      </MaterialStep>
+                    </Stepper>
+
+                    <Wizard name='EventWizard'>
+                      <Step name='description' component={EventDescriptionStep} next='location' />
+                      <Step name='location' component={EventLocationStep} next='dateTime' />
+                      <Step name='dateTime' component={EventDateTimeStep} next='eventInvitations' />
+                      <Step name='eventInvitations' component={EventInvitationsStep} next='description' />
+                      <Step name='requests' component={EventRequestsStep} next='location' />
+                      <Step name='reviewAndCreate' component={EventReviewAndCreateStep}  />
+                    </Wizard>
                     <Box
                       bgcolor="background.paper"
                       color="text.primary"
@@ -171,7 +215,7 @@ const EventUpsertWizardContainer = (props) => {
                       zIndex="modal"
                     >
                       <StepButtons
-                        selectedIndex={eventsState.selectedWizardIndex}
+                        selectedIndex={selectedWizardIndex}
                         classes={classes}
                         back={wizardActions.back}
                         next={wizardActions.next}
