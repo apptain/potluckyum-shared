@@ -36,6 +36,8 @@ import Form from "react-jsonschema-form";
 
 import formWidgets from "../../schemaform/widgets";
 import CustomFieldTemplate from "../../schemaform/CustomFieldTemplate";
+import {default as wizardReduxActions} from 'react-redux-wizard';
+
 import CustomObjectFieldTemplate from "../../schemaform/CustomObjectFieldTemplate";
 
 const EventUpsertWizardContainer = (props) => {
@@ -96,11 +98,15 @@ const EventUpsertWizardContainer = (props) => {
   const wizardActions = {
     //back and next handled in container, but could move to statecharts
     back: (step, jumpToStep) => {
-
-      jumpToStep(step - 1);
+      debugger;
+      wizardReduxActions.previous();
+      //jumpToStep(step - 1);
     },
     next: (step, jumpToStep) => {
-      jumpToStep(step + 1);
+      debugger;
+      wizardReduxActions.next();
+
+      //jumpToStep(step + 1);
     },
     //below are handled in statechart
     cancel: () => {
@@ -152,6 +158,26 @@ const EventUpsertWizardContainer = (props) => {
 
   const { selectedEvent, selectedInvitation } = eventsState;
 
+  const schema = eventSchema();
+  const wizardSteps = [];
+  const schemaProperties = schema.properties;
+  const selectedSchema = schemaProperties[wizardState.EventWizard.currentStep];
+
+  for(const name in schemaProperties) {
+
+    const val = schemaProperties[name];
+    wizardSteps.push(val);
+    // propertyName is what you want
+    // you can get the value like this: myObject[propertyName]
+  }
+
+  // Object.getOwnPropertyNames(schemaProperties).forEach((x,i) => {
+  //
+  // });
+  // debugger;
+
+
+
   const EventDescriptionStep = () => <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
   const EventLocationStep = () => <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
   const EventDateTimeStep = () => <EventDateTime index={2} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
@@ -159,51 +185,29 @@ const EventUpsertWizardContainer = (props) => {
   const EventRequestsStep = () => <EventRequests index={4} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
   const EventReviewAndCreateStep = () => <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />;
 
-  // const FullForm = (props) => {
-  //   return (
-  //     <Grid>
-  //       <Form
-  //         safeRenderCompletion={true}
-  //         schema={eventSchema()}
-  //         formData={selectedEvent}
-  //         onChange={selectedEventChange}
-  //         uiSchema={eventUISchema()}
-  //         //onSubmit={handleSubmit}
-  //         widgets={formWidgets}
-  //         FieldTemplate={CustomFieldTemplate}
-  //         ObjectFieldTemplate={CustomObjectFieldTemplate}
-  //       >
-  //         <div>
-  //           {/*empty div hides submit button in rsjf*/}
-  //         </div>
-  //       </Form>
-  //     </Grid>
-  //   );
-  // }
-
-  const FullForm = (props) => {
+  const FullForm = (schema, uiSchema) => {
+    debugger;
     return (
-      <Grid>
-        <Form
-          safeRenderCompletion={true}
-          schema={eventSchema()}
-          formData={selectedEvent}
-          //onChange={selectedEventChange}
-          uiSchema={eventUISchema()}
-          //onSubmit={handleSubmit}
-          widgets={formWidgets}
-          FieldTemplate={CustomFieldTemplate}
-          ObjectFieldTemplate={CustomObjectFieldTemplate}
-          {...props}
-        >
-          <div>
-            {/*empty div hides submit button in rsjf*/}
-          </div>
-        </Form>
-      </Grid>
+      <Form
+        safeRenderCompletion={true}
+        schema={schema}
+        // formData={selectedEvent}
+        //onChange={selectedEventChange}
+        uiSchema={uiSchema}
+        //onSubmit={handleSubmit}
+        widgets={formWidgets}
+        FieldTemplate={CustomFieldTemplate}
+        //ObjectFieldTemplate={CustomObjectFieldTemplate}
+      >
+        <div>
+          {/*empty div hides submit button in rsjf*/}
+        </div>
+      </Form>
     );
   }
 
+  debugger;
+  //const RenderForm = FullForm(selectedSchema, eventUISchema());
 
 
   //TODO clear up gridlock...
@@ -238,8 +242,8 @@ const EventUpsertWizardContainer = (props) => {
                         <StepLabel>Review and Create</StepLabel>
                       </MaterialStep>
                     </Stepper>
+                    {FullForm(selectedSchema, eventUISchema())}
 
-                    <FullForm {...props}  />
                     {/*<Wizard name='EventWizard'>*/}
                     {/*  <Step name='description' component={EventDescriptionStep} next='location' />*/}
                     {/*  <Step name='location' component={EventLocationStep} next='dateTime' />*/}

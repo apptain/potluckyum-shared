@@ -18,7 +18,7 @@ export default function CustomObjectField(props) {
           schema={schema}
           // formData={selectedEvent}
           //onChange={selectedEventChange}
-          uiSchema={uiSchema}
+          //uiSchema={uiSchema}
           //onSubmit={handleSubmit}
           widgets={formWidgets}
           FieldTemplate={CustomFieldTemplate}

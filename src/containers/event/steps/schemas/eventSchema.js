@@ -9,6 +9,7 @@ export default () => {
     "properties": {
       "description": {
         "type": "object",
+        "title": "Description",
         "required": [
           "name"
         ],
