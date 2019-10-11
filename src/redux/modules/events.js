@@ -31,10 +31,10 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case EVENT_CHANGE:
-      debugger;
+
       return {...state, selectedEvent: action.selectedEvent};
     case INVITATION_CHANGE:
-      debugger;
+
       return {...state, selectedInvitation: action.selectedInvitation};
     case EVENTS_LIST:
       return {...state, selectedEvents: [], eventsGetting: true};

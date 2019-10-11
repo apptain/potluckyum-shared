@@ -15,12 +15,12 @@ export default function EventDescription(props) {
       <Form
         safeRenderCompletion={true}
         schema={eventDescriptionSchema()}
-        formData={props.selectedEvent}
-        onChange={props.selectedEventChange}
+        // formData={props.selectedEvent}
+        // onChange={props.selectedEventChange}
         uiSchema={eventDescriptionUISchema()}
         //onSubmit={handleSubmit}
         widgets={formWidgets}
-        FieldTemplate={CustomFieldTemplate}
+        // FieldTemplate={CustomFieldTemplate}
       >
         <div>
           {/*empty div hides submit button in rsjf*/}

@@ -166,7 +166,7 @@ class Wizard extends Component {
   }
 
   render() {
-    debugger;
+
 
     const { classes } = this.props;
     const queryString = this.props.location.search

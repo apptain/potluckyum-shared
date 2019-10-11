@@ -50,7 +50,6 @@ export function eventUpdate(id, event) {
 }
 
 export function eventCreate(event) {
-  debugger;
   return API.post("events", `/events`, {
     body: event
   });

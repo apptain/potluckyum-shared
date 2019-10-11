@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from "@material-ui/core/Button";
 
 const StepButtons = (props) => {
-  debugger;
+
   return (
     <div className={props.classes.flexBar}>
       {props.selectedIndex > 0 &&
@@ -11,6 +11,7 @@ const StepButtons = (props) => {
           onClick={props.handleBack}
           className={props.classes.backButton}
           size='large'
+          onClick={props.back}
         >
           Back
         </Button>
@@ -19,6 +20,7 @@ const StepButtons = (props) => {
         variant="contained"
         color="primary"
         size='large'
+        onClick={props.next}
       >
         Next
       </Button>
@@ -26,6 +28,7 @@ const StepButtons = (props) => {
         variant="contained"
         color="primary"
         size='large'
+        onClick={props.cancel}
       >
         Cancel
       </Button>
@@ -33,6 +36,7 @@ const StepButtons = (props) => {
         variant="contained"
         color="primary"
         size='large'
+        onClick={props.review}
       >
         Review and Create or Update
       </Button>
@@ -40,6 +44,7 @@ const StepButtons = (props) => {
         variant="contained"
         color="primary"
         size='large'
+        onClick={props.create}
       >
         Review and Create or Update
       </Button>
@@ -47,6 +52,7 @@ const StepButtons = (props) => {
         variant="contained"
         color="primary"
         size='large'
+        onClick={props.update}
       >
         Review and Create or Update
       </Button>

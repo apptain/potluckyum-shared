@@ -58,8 +58,8 @@ export default function(props) {
       rowProps && {
       mode: editing === rowProps.original ? "edit" : "view",
       actions: {
-        onEdit: () => { debugger; setEditing({}); },
-        onCancel: () => { debugger;  setEditing(null); },
+        onEdit: () => {  setEditing({}); },
+        onCancel: () => {   setEditing(null); },
       }
     }) ||
     {};
@@ -78,7 +78,7 @@ export default function(props) {
   ];
 
   const handleSubmit = ({formData}) => {
-    debugger;
+
     const event = props.selectedEvent;
     if(!event.invitations) {
       event.invitations = [];

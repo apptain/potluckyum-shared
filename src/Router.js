@@ -15,7 +15,6 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import config from "./config";
 import "./index.css";
-import "react-stepzilla/src/css/main.css";
 import "react-table/react-table.css";
 
 import { Provider } from 'react-redux';

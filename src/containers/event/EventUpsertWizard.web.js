@@ -16,7 +16,6 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import styles from './styles';
 
-import StepZilla from 'react-stepzilla';
 import {default as MaterialStep} from '@material-ui/core/Step';
 
 import StepButtons from '../../components/StepButtons';
@@ -28,7 +27,16 @@ import EventInvitations from './steps/EventInvitations';
 import EventRequests from './steps/EventRequests';
 
 import configureMachine, {CREATE, UPDATE, CHANGE, actions} from '../../redux/statemachine/events';
+
+import eventSchema from "./steps/schemas/eventSchema";
+import eventUISchema from "./steps/schemas/eventUISchema";
+
 import Button from "@material-ui/core/Button";
+import Form from "react-jsonschema-form";
+
+import formWidgets from "../../schemaform/widgets";
+import CustomFieldTemplate from "../../schemaform/CustomFieldTemplate";
+import CustomObjectFieldTemplate from "../../schemaform/CustomObjectFieldTemplate";
 
 const EventUpsertWizardContainer = (props) => {
   //classes injected with theme
@@ -36,10 +44,10 @@ const EventUpsertWizardContainer = (props) => {
 
   //redux wire up
   const eventsState = useSelector(state => { return state.events});
-  const wizardsState = useSelector(state => { debugger; return state.wizards});
+  const wizardState = useSelector(state => {  return state.wizards});
 
-  const selectedWizardIndex = Object.getOwnPropertyNames(wizardsState.EventWizard.steps).findIndex(p => p == wizardsState.EventWizard.currentStep);
-  debugger;
+  const selectedWizardIndex = Object.getOwnPropertyNames(wizardState.EventWizard.steps).findIndex(p => p == wizardState.EventWizard.currentStep);
+
 
   const dispatch = useDispatch();
   const machine =  configureMachine();
@@ -49,7 +57,8 @@ const EventUpsertWizardContainer = (props) => {
       eventsState
     },
     actions: {
-      selectedEventChange: (context, e) => dispatch(actions.selectedEventChange(context, e))
+      selectedEventChange: (context, e) => dispatch(actions.selectedEventChange(context, e)),
+      setSelectedWizardIndex: (context, e) => dispatch(actions.selectedEventChange(context, e))
     }
   })
 
@@ -57,7 +66,6 @@ const EventUpsertWizardContainer = (props) => {
   send({
     type: CREATE
   });
-
 
   // useEffect(() => {
   //   start();
@@ -67,7 +75,7 @@ const EventUpsertWizardContainer = (props) => {
   // });
 
   // const handleMachineTransition = ({context}) => {
-  //   debugger;
+  //
   //   // props.logState(currentState);
   //   setState({ context });
   // };
@@ -88,6 +96,7 @@ const EventUpsertWizardContainer = (props) => {
   const wizardActions = {
     //back and next handled in container, but could move to statecharts
     back: (step, jumpToStep) => {
+
       jumpToStep(step - 1);
     },
     next: (step, jumpToStep) => {
@@ -143,17 +152,6 @@ const EventUpsertWizardContainer = (props) => {
 
   const { selectedEvent, selectedInvitation } = eventsState;
 
-  // //TODO remove stepzilla dependency and improve wizard
-  // const steps =
-  // [
-  //   {name: 'Description', component: <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-  //   {name: 'Location', component: <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-  //   {name: 'Date Time', component: <EventDateTime index={2} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-  //   {name: 'Invitations', component: <EventInvitations index={3}   classes={classes} selectedEvent={selectedEvent} selectedInvitation={selectedInvitation} selectedEventChange={selectedEventChangeDebounced} invitationChange={invitationChangeDebounced} />},
-  //   {name: 'Requests', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />},
-  //   {name: 'Review and Launch', component: <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />}
-  // ];
-
   const EventDescriptionStep = () => <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
   const EventLocationStep = () => <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
   const EventDateTimeStep = () => <EventDateTime index={2} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
@@ -161,12 +159,56 @@ const EventUpsertWizardContainer = (props) => {
   const EventRequestsStep = () => <EventRequests index={4} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
   const EventReviewAndCreateStep = () => <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />;
 
+  // const FullForm = (props) => {
+  //   return (
+  //     <Grid>
+  //       <Form
+  //         safeRenderCompletion={true}
+  //         schema={eventSchema()}
+  //         formData={selectedEvent}
+  //         onChange={selectedEventChange}
+  //         uiSchema={eventUISchema()}
+  //         //onSubmit={handleSubmit}
+  //         widgets={formWidgets}
+  //         FieldTemplate={CustomFieldTemplate}
+  //         ObjectFieldTemplate={CustomObjectFieldTemplate}
+  //       >
+  //         <div>
+  //           {/*empty div hides submit button in rsjf*/}
+  //         </div>
+  //       </Form>
+  //     </Grid>
+  //   );
+  // }
+
+  const FullForm = (props) => {
+    return (
+      <Grid>
+        <Form
+          safeRenderCompletion={true}
+          schema={eventSchema()}
+          formData={selectedEvent}
+          //onChange={selectedEventChange}
+          uiSchema={eventUISchema()}
+          //onSubmit={handleSubmit}
+          widgets={formWidgets}
+          FieldTemplate={CustomFieldTemplate}
+          ObjectFieldTemplate={CustomObjectFieldTemplate}
+          {...props}
+        >
+          <div>
+            {/*empty div hides submit button in rsjf*/}
+          </div>
+        </Form>
+      </Grid>
+    );
+  }
+
 
 
   //TODO clear up gridlock...
   return (
     <React.Fragment>
-
       <CssBaseline />
       <div className={classes.root}>
         <Grid container justify="center">
@@ -197,14 +239,15 @@ const EventUpsertWizardContainer = (props) => {
                       </MaterialStep>
                     </Stepper>
 
-                    <Wizard name='EventWizard'>
-                      <Step name='description' component={EventDescriptionStep} next='location' />
-                      <Step name='location' component={EventLocationStep} next='dateTime' />
-                      <Step name='dateTime' component={EventDateTimeStep} next='eventInvitations' />
-                      <Step name='eventInvitations' component={EventInvitationsStep} next='description' />
-                      <Step name='requests' component={EventRequestsStep} next='location' />
-                      <Step name='reviewAndCreate' component={EventReviewAndCreateStep}  />
-                    </Wizard>
+                    <FullForm {...props}  />
+                    {/*<Wizard name='EventWizard'>*/}
+                    {/*  <Step name='description' component={EventDescriptionStep} next='location' />*/}
+                    {/*  <Step name='location' component={EventLocationStep} next='dateTime' />*/}
+                    {/*  <Step name='dateTime' component={EventDateTimeStep} next='eventInvitations' />*/}
+                    {/*  <Step name='eventInvitations' component={EventInvitationsStep} next='description' />*/}
+                    {/*  <Step name='requests' component={EventRequestsStep} next='location' />*/}
+                    {/*  <Step name='reviewAndCreate' component={EventReviewAndCreateStep}  />*/}
+                    {/*</Wizard>*/}
                     <Box
                       bgcolor="background.paper"
                       color="text.primary"

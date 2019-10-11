@@ -9,7 +9,7 @@ import { INVITATION_GET,
   INVITATION_CREATE_FAIL } from '../modules/invitations';
 
 function* invitationCreateRequest(apiCall, invitation, token) {
-  debugger;
+
   const {response, error} = yield call(invitationCreateApiCall, invitation, token);
   if(response) {
       const invitation = response;
