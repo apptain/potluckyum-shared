@@ -7,6 +7,7 @@ import withStyles from '@material-ui/styles/withStyles';
 import { withRouter } from 'react-router-dom';
 import debounce from 'debounce';
 import { Wizard, Step } from 'react-redux-wizard';
+import {initializeWizard, registerStep, previousStep, nextStep, destroyWizard} from '../../redux/modules/wizard.ts';
 
 import Stepper from '@material-ui/core/Stepper';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -36,7 +37,6 @@ import Form from "react-jsonschema-form";
 
 import formWidgets from "../../schemaform/widgets";
 import CustomFieldTemplate from "../../schemaform/CustomFieldTemplate";
-import {default as wizardReduxActions} from 'react-redux-wizard';
 
 import CustomObjectFieldTemplate from "../../schemaform/CustomObjectFieldTemplate";
 
@@ -99,12 +99,13 @@ const EventUpsertWizardContainer = (props) => {
     //back and next handled in container, but could move to statecharts
     back: (step, jumpToStep) => {
       debugger;
-      wizardReduxActions.previous();
+      //wizardReduxActions.previous();
       //jumpToStep(step - 1);
     },
     next: (step, jumpToStep) => {
       debugger;
-      wizardReduxActions.next();
+      nextStep("")
+      //wizardReduxActions.next();
 
       //jumpToStep(step + 1);
     },
@@ -164,19 +165,24 @@ const EventUpsertWizardContainer = (props) => {
   const selectedSchema = schemaProperties[wizardState.EventWizard.currentStep];
 
   for(const name in schemaProperties) {
-
+    debugger;
     const val = schemaProperties[name];
     wizardSteps.push(val);
+    registerStep(name, {
+      // name: props.name,
+      // previous: props.previous,
+      // next: props.next,
+      // finish: !props.next
+    });
     // propertyName is what you want
     // you can get the value like this: myObject[propertyName]
   }
 
   // Object.getOwnPropertyNames(schemaProperties).forEach((x,i) => {
+  //   debugger;
   //
   // });
   // debugger;
-
-
 
   const EventDescriptionStep = () => <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
   const EventLocationStep = () => <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;

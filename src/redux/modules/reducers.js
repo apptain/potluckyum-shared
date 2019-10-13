@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import auth from './auth';
 import events from './events';
 import invitations from './invitations';
-import { reducer as wizards } from 'react-redux-wizard';
+import wizards from './wizard.ts'
 
 export default combineReducers({
   auth,
