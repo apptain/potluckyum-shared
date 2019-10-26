@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import TimePicker from 'react-time-picker';
 import Grid from "@material-ui/core/Grid";
 import Form from "react-jsonschema-form";
-import eventSchema from "../../containers/event/steps/schemas/eventSchema";
 import formWidgets from "./index";
 import CustomFieldTemplate from "../customFieldTemplate";
 

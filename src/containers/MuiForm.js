@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { TextField, RadioButton, RadioButtonGroup, Checkbox, SelectField, MenuItem }  from 'material-ui';
-import asyncValidate from './steps/table/asyncValidate'
+
 const validate = values => {
   const errors = {}
   const requiredFields = [ 'firstName', 'lastName', 'email', 'favoriteColor', 'notes' ]
