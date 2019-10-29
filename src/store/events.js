@@ -1,43 +1,27 @@
-import {
-  EVENT_CREATE, EVENT_CREATE_FAIL, EVENT_CREATE_SUCCESS, EVENT_DELETE, EVENT_DELETE_FAIL, EVENT_DELETE_SUCCESS,
-  EVENT_GET, EVENT_GET_FAIL, EVENT_GET_SUCCESS,
-  EVENT_UPDATE, EVENT_UPDATE_FAIL, EVENT_UPDATE_SUCCESS,
-  EVENTS_LIST, EVENTS_LIST_FAIL, EVENTS_LIST_SUCCESS, INVITATION_CHANGE
-} from "../../../potluckyum-share-bu/src/redux/modules/events";
-import {
-  CHANGE,
-  CREATE,
-  eventCreate,
-  eventCreatePersist,
-  eventUpdate,
-  invitationSend,
-  ready,
-  UPDATE
-} from "./statemachine/events";
 import {Machine} from "xstate";
 
-export const EVENT_CHANGE = 'potluckyum/events/EVENT_CHANGE';
-export const EVENT_INVITATION_CHANGE = 'potluckyum/events/EVENT_CHANGE';
+export const EVENT_CHANGE = '@potluckyum/EVENT_CHANGE';
+export const INVITATION_CHANGE = '@potluckyum/INVITATION_CHANGE';
 
-export const EVENT_GET_CALL = '@state/EVENT_GET_CALL';
-export const EVENT_GET_CALL_SUCCESS = '@state/EVENT_GET_CALL_SUCCESS';
-export const EVENT_GET_CALL_FAIL = '@state/EVENT_GET_CALL_FAIL';
+export const EVENT_GET_CALL = '@potluck/EVENT_GET_CALL';
+export const EVENT_GET_CALL_SUCCESS = '@potluck/EVENT_GET_CALL_SUCCESS';
+export const EVENT_GET_CALL_FAIL = '@potluck/EVENT_GET_CALL_FAIL';
 
-export const EVENT_POST_CALL = '@state/EVENT_POST_CALL';
-export const EVENT_POST_CALL_SUCCESS = '@state/EVENT_POST_CALL_SUCCESS';
-export const EVENT_POST_CALL_FAIL = '@state/EVENT_POST_CALL_FAIL';
+export const EVENT_POST_CALL = '@potluck/EVENT_POST_CALL';
+export const EVENT_POST_CALL_SUCCESS = '@potluck/EVENT_POST_CALL_SUCCESS';
+export const EVENT_POST_CALL_FAIL = '@potluck/EVENT_POST_CALL_FAIL';
 
-export const EVENT_PUT_CALL = '@state/EVENT_PUT_CALL';
-export const EVENT_PUT_CALL_SUCCESS = '@state/EVENT_PUT_CALL_SUCCESS';
-export const EVENT_PUT_CALL_FAIL = '@state/EVENT_PUT_CALL_FAIL';
+export const EVENT_PUT_CALL = '@potluck/EVENT_PUT_CALL';
+export const EVENT_PUT_CALL_SUCCESS = '@potluck/EVENT_PUT_CALL_SUCCESS';
+export const EVENT_PUT_CALL_FAIL = '@potluck/EVENT_PUT_CALL_FAIL';
 
-export const EVENT_PATCH_CALL = '@state/EVENT_PATCH_CALL';
-export const EVENT_PATCH_CALL_SUCCESS = '@state/EVENT_PATCH_CALL_SUCCESS';
-export const EVENT_PATCH_CALL_FAIL = '@state/EVENT_PATCH_CALL_FAIL';
+export const EVENT_PATCH_CALL = '@potluck/EVENT_PATCH_CALL';
+export const EVENT_PATCH_CALL_SUCCESS = '@potluck/EVENT_PATCH_CALL_SUCCESS';
+export const EVENT_PATCH_CALL_FAIL = '@potluck/EVENT_PATCH_CALL_FAIL';
 
-export const EVENT_DELETE_CALL = '@state/EVENT_DELETE_CALL';
-export const EVENT_DELETE_CALL_SUCCESS = '@state/EVENT_DELETE_CALL_SUCCESS';
-export const EVENT_DELETE_CALL_FAIL = '@state/EVENT_DELETE_CALL_FAIL';
+export const EVENT_DELETE_CALL = '@potluck/EVENT_DELETE_CALL';
+export const EVENT_DELETE_CALL_SUCCESS = '@potluck/EVENT_DELETE_CALL_SUCCESS';
+export const EVENT_DELETE_CALL_FAIL = '@potluck/EVENT_DELETE_CALL_FAIL';
 
 const initialContext = {
   selectedEvent: {},
@@ -108,6 +92,7 @@ export const actions = {
 const guards = {
   shouldCreateNewEvent: (ctx, event) => {
     //TODO
+    debugger;
     return true;
   },
   shouldUpdateEvent: (ctx, event) => {
@@ -120,31 +105,36 @@ const guards = {
   }
 };
 
+export const EVENT_WIZARD_READY = '@potluckyum/state/EVENT_CREATE';
+export const EVENT_WIZARD_CREATE = '@potluck/EVENT_WIZARD_CREATE';
+export const EVENT_WIZARD_UPDATE = '@potluck/EVENT_WIZARD_UPDATE';
+export const EVENT_WIZARD_NEXT = '@potluckyum/state/EVENT_WIZARD_NEXT';
+export const EVENT_WIZARD_PREVIOUS = 'potluckyum/state/EVENT_WIZARD_PREVIOUS';
+
+
+export const EVENT_DELETE = '@potluck/DELETE';
 
 const flowMachine = Machine({
-  initial: ready,
+  initial: EVENT_WIZARD_READY,
   states: {
-    [ready]: {
+    [EVENT_WIZARD_READY]: {
       on: {
-        [CREATE]: {
-          target: eventCreate,
+        [EVENT_WIZARD_CREATE]: {
+          target: EVENT_WIZARD_CREATE,
           cond: 'shouldCreateNewEvent',
         },
-        [UPDATE]: {
-          target: eventUpdate,
-          cond: 'shouldCreateNewEvent',
-        }
+        // [EVENT_WIZARD_UPDATE]: {
+        //   target: EVENT_WIZARD_UPDATE,
+        //   //cond: 'shouldCreateNewEvent',
+        // }
       }
     },
-    [eventCreate]: {
+    [EVENT_WIZARD_CREATE]: {
       on: {
-        [CHANGE]: {
-          actions: 'eventChange'
+        [EVENT_CHANGE]: {
+          actions: 'eventChange',
         }
       }
-    },
-    [eventUpdate]: {
-
     }
   }
 });
@@ -152,7 +142,7 @@ const flowMachine = Machine({
 export const configureMachine = (context = initialContext) =>
 flowMachine
   .withConfig({
-    actions,
+    //actions,
     guards
   });
 
@@ -170,39 +160,40 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case EVENT_CHANGE:
+      debugger;
       return {...state, selectedEvent: action.selectedEvent};
     case INVITATION_CHANGE:
       return {...state, selectedInvitation: action.selectedInvitation};
-    case EVENTS_LIST:
-      return {...state, selectedEvents: [], eventsGetting: true};
-    case EVENTS_LIST_SUCCESS:
-      return { ...state, selectedEvents: action.data, eventsGetting: false};
-    case EVENTS_LIST_FAIL:
-      return { ...state, selectedEvents: [], eventsGetting: false};
-    case EVENT_GET:
-      return { ...state, selectedEvent: null, eventGetting : true};
-    case EVENT_GET_SUCCESS:
-      return { ...state, selectedEvent: action.data, eventGetting: false};
-    case EVENT_GET_FAIL:
-      return { ...state, selectedEvent: null, eventGetting: false};
-    case EVENT_CREATE:
-      return {...state, eventUpdating: true};
-    case EVENT_CREATE_SUCCESS:
-      return { ...state, event: action.data, eventUpdating: false};
-    case EVENT_CREATE_FAIL:
-      return { ...state, eventUpdating: false};
-    case EVENT_UPDATE:
-      return {...state, eventUpdating: true};
-    case EVENT_UPDATE_SUCCESS:
-      return { ...state, event: action.data, eventUpdating: false};
-    case EVENT_UPDATE_FAIL:
-      return { ...state, eventUpdating: false};
-    case EVENT_DELETE:
-      return {...state, eventUpdating: true};
-    case EVENT_DELETE_SUCCESS:
-      return { ...state, event: action.data, eventUpdating: false};
-    case EVENT_DELETE_FAIL:
-      return { ...state, eventUpdating: false};
+    // case EVENTS_LIST:
+    //   return {...state, selectedEvents: [], eventsGetting: true};
+    // case EVENTS_LIST_SUCCESS:
+    //   return { ...state, selectedEvents: action.data, eventsGetting: false};
+    // case EVENTS_LIST_FAIL:
+    //   return { ...state, selectedEvents: [], eventsGetting: false};
+    // case EVENT_GET:
+    //   return { ...state, selectedEvent: null, eventGetting : true};
+    // case EVENT_GET_SUCCESS:
+    //   return { ...state, selectedEvent: action.data, eventGetting: false};
+    // case EVENT_GET_FAIL:
+    //   return { ...state, selectedEvent: null, eventGetting: false};
+    // case EVENT_CREATE:
+    //   return {...state, eventUpdating: true};
+    // case EVENT_CREATE_SUCCESS:
+    //   return { ...state, event: action.data, eventUpdating: false};
+    // case EVENT_CREATE_FAIL:
+    //   return { ...state, eventUpdating: false};
+    // case EVENT_UPDATE:
+    //   return {...state, eventUpdating: true};
+    // case EVENT_UPDATE_SUCCESS:
+    //   return { ...state, event: action.data, eventUpdating: false};
+    // case EVENT_UPDATE_FAIL:
+    //   return { ...state, eventUpdating: false};
+    // case EVENT_DELETE:
+    //   return {...state, eventUpdating: true};
+    // case EVENT_DELETE_SUCCESS:
+    //   return { ...state, event: action.data, eventUpdating: false};
+    // case EVENT_DELETE_FAIL:
+    //   return { ...state, eventUpdating: false};
 
 
     default:
