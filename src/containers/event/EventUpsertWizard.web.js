@@ -38,6 +38,7 @@ const EventUpsertWizardContainer = (props) => {
 
   //redux wire up
   const eventsState = useSelector(state => { return state.events});
+  debugger;
   const wizardState = useSelector(state => {  return state.wizards});
   //const selectedWizardIndex = Object.getOwnPropertyNames(wizardState.EventWizard.steps).findIndex(p => p == wizardState.EventWizard.currentStep);
   const selectedWizardIndex = 0;
@@ -57,23 +58,10 @@ const EventUpsertWizardContainer = (props) => {
   });
 
   const selectedEventChange = ({formData}) => {
-
-    const [state, send] = useMachine(machine, {
-      context: {
-        eventsState
-      },
-      actions: {
-        selectedEventChange: (context, e) => dispatch(actions.selectedEventChange(context, e)),
-        selectedEventWizardNext: (context, e) => dispatch(actions.selectedEventChange(context, e)),
-        selectedEventWizardPrevious:  (context, e) => dispatch(actions.selectedEventChange(context, e)),
-        selectedEventWizardReview:  (context, e) => dispatch(actions.selectedEventWizardReview(context, e)),
-        selectedEventSave: (context, e) => dispatch(actions.selectedEventChange(context, e))
-      }
-    });
-
     debugger;
     send({
       type: EVENT_CHANGE,
+      dispatch,
       changes: formData
     });
   };
@@ -81,18 +69,17 @@ const EventUpsertWizardContainer = (props) => {
   const invitationChange = ({formData}) => {
     send({
       type: INVITATION_CHANGE,
+      dispatch,
       changes: formData
     });
   };
 
   const { selectedEvent, selectedInvitation } = eventsState;
 
-  debugger;
   const schema = eventSchema();
   const schemaProperties = schema.properties;
   // const selectedSchema = schemaProperties.description;
 
-  debugger;
   const wizardSteps = [];
 
   for(const name in schemaProperties) {

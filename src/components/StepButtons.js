@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 const StepButtons = (props) => {
 
   return (
-    <div className={props.classes.flexBar}>
+    <div>
       {props.selectedIndex > 0 &&
         <Button
           onClick={props.handleBack}

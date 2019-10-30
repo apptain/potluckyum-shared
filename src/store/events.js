@@ -60,13 +60,13 @@ export const actions = {
   //   return {type: EVENT_DELETE, id};
   // }
 
-  eventChange: (ctx, { changes }) =>
+  eventChange: (ctx, { dispatch, changes }) =>
   {
     debugger;
-    return {
+    dispatch({
       type: EVENT_CHANGE,
       selectedEvent: {...ctx.selectedEvent, ...changes}
-    }
+    });
   },
   invitationChange: (ctx, { changes }) =>
   {
@@ -123,6 +123,9 @@ const flowMachine = Machine({
           target: EVENT_WIZARD_CREATE,
           cond: 'shouldCreateNewEvent',
         },
+        [EVENT_CHANGE]: {
+          actions: 'eventChange',
+        }
         // [EVENT_WIZARD_UPDATE]: {
         //   target: EVENT_WIZARD_UPDATE,
         //   //cond: 'shouldCreateNewEvent',
@@ -142,7 +145,7 @@ const flowMachine = Machine({
 export const configureMachine = (context = initialContext) =>
 flowMachine
   .withConfig({
-    //actions,
+    actions,
     guards
   });
 
