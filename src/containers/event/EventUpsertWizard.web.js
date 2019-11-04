@@ -24,9 +24,12 @@ import CustomFieldTemplate from "../../schemaform/CustomFieldTemplate";
 
 import {
   EVENT_WIZARD_CREATE,
-  EVENT_WIZARD_UDPATE,
+  EVENT_WIZARD_UPDATE,
   EVENT_WIZARD_NEXT,
-
+  EVENT_WIZARD_PREVIOUS,
+  EVENT_WIZARD_CANCEL,
+  EVENT_WIZARD_REVIEW,
+  EVENT_WIZARD_DELETE,
   EVENT_CHANGE, INVITATION_CHANGE, configureMachine } from '../../store/events';
 
 import eventSchema from "../../schemas/event/eventSchema";
@@ -38,14 +41,15 @@ const EventUpsertWizardContainer = (props) => {
 
   //redux wire up
   const eventsState = useSelector(state => { return state.events});
-  debugger;
   const wizardState = useSelector(state => {  return state.wizards});
   //const selectedWizardIndex = Object.getOwnPropertyNames(wizardState.EventWizard.steps).findIndex(p => p == wizardState.EventWizard.currentStep);
-  const selectedWizardIndex = 0;
+  const selectedWizardIndex = eventsState.selectedWizardIndex || 0;
+
 
   const dispatch = useDispatch();
   const machine =  configureMachine();
 
+  debugger;
   const [state, send] = useMachine(machine, {
     context: {
       eventsState
@@ -99,7 +103,10 @@ const EventUpsertWizardContainer = (props) => {
     // you can get the value like this: myObject[propertyName]
   }
 
-  const selectedSchema = wizardSteps[selectedWizardIndex + 1];
+  //+1 to our wizard steps
+  const wizardStepsCount = wizardSteps.length;
+
+  const selectedSchema = wizardSteps[selectedWizardIndex];
 
   const debounceEventHandler = (...args) => {
     const debounced = debounce(...args)
@@ -131,7 +138,6 @@ const EventUpsertWizardContainer = (props) => {
       </Form>
     );
   }
-
 
   //TODO clear up gridlock...
   return (
@@ -179,12 +185,13 @@ const EventUpsertWizardContainer = (props) => {
                       <StepButtons
                         selectedIndex={selectedWizardIndex}
                         classes={classes}
-                        // back={wizardActions.back}
-                        // next={wizardActions.next}
-                        // cancel={wizardActions.cancel}
-                        // review={wizardActions.review}
-                        // create={wizardActions.create}
-                        // update={wizardActions.update}
+                        previous={(e) => send({dispatch, type: EVENT_WIZARD_PREVIOUS, selectedWizardIndex, wizardStepsCount })}
+                        next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
+                        // cancel={send({dispatch, type: EVENT_WIZARD_CANCEL})}
+                        // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
+                        // create={send({dispatch, type: EVENT_WIZARD_CREATE})}
+                        // update={send({dispatch, type: EVENT_WIZARD_UPDATE})}
+                        // deleted={send({dispatch, type: EVENT_WIZARD_DELETE})}
                       />
                     </Box>
                   </Grid>

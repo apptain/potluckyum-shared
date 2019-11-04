@@ -75,6 +75,22 @@ export const actions = {
       selectedEvent: {...ctx.selectedEvent, ...changes}
     }
   },
+  eventWizardPrevious: (ctx, { dispatch, selectedWizardIndex }) =>
+  {
+    debugger;
+    dispatch({
+      type: EVENT_WIZARD_PREVIOUS,
+      selectedWizardIndex: selectedWizardIndex - 1
+    });
+  },
+  eventWizardNext: (ctx, { dispatch, selectedWizardIndex }) =>
+  {
+    debugger;
+    dispatch({
+      type: EVENT_WIZARD_NEXT,
+      selectedWizardIndex:  selectedWizardIndex + 1
+    });
+  },
   eventGet: (id) => {
     return {type: eventGet, id};
   },
@@ -102,17 +118,23 @@ const guards = {
   shouldSendInvitation: (ctx, event) => {
     //TODO
     return true;
-  }
+  },
+  eventWizardShouldMoveNext: (ctx, {selectedWizardIndex, wizardStepsCount}) => {
+    return selectedWizardIndex < wizardStepsCount - 2;
+  },
+  eventWizardShouldMovePrevious: (ctx, {selectedWizardIndex, wizardStepsCount}) => {
+    return selectedWizardIndex > 0;
+  },
 };
 
 export const EVENT_WIZARD_READY = '@potluckyum/state/EVENT_CREATE';
-export const EVENT_WIZARD_CREATE = '@potluck/EVENT_WIZARD_CREATE';
-export const EVENT_WIZARD_UPDATE = '@potluck/EVENT_WIZARD_UPDATE';
 export const EVENT_WIZARD_NEXT = '@potluckyum/state/EVENT_WIZARD_NEXT';
 export const EVENT_WIZARD_PREVIOUS = 'potluckyum/state/EVENT_WIZARD_PREVIOUS';
-
-
-export const EVENT_DELETE = '@potluck/DELETE';
+export const EVENT_WIZARD_CREATE = '@potluck/EVENT_WIZARD_CREATE';
+export const EVENT_WIZARD_UPDATE = '@potluck/EVENT_WIZARD_UPDATE';
+export const EVENT_WIZARD_CANCEL = '@potluck/EVENT_WIZARD_CANCEL';
+export const EVENT_WIZARD_REVIEW = '@potluck/EVENT_WIZARD_REVIEW';
+export const EVENT_WIZARD_DELETE = '@potluck/EVENT_WIZARD_DELETE';
 
 const flowMachine = Machine({
   initial: EVENT_WIZARD_READY,
@@ -136,6 +158,14 @@ const flowMachine = Machine({
       on: {
         [EVENT_CHANGE]: {
           actions: 'eventChange',
+        },
+        [EVENT_WIZARD_PREVIOUS]: {
+          cond: 'eventWizardShouldMovePrevious',
+          actions: 'eventWizardPrevious'
+        },
+        [EVENT_WIZARD_NEXT]: {
+          cond: 'eventWizardShouldMoveNext',
+          actions: 'eventWizardNext'
         }
       }
     }
@@ -150,6 +180,7 @@ flowMachine
   });
 
 const initialState = {
+  selectedWizardIndex: 0,
   selectedEvent: {},
   selectedInvitation: {},
   unsavedChanges: {},
@@ -161,12 +192,19 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action = {}) {
+  //state = initialState;
   switch (action.type) {
     case EVENT_CHANGE:
       debugger;
       return {...state, selectedEvent: action.selectedEvent};
     case INVITATION_CHANGE:
       return {...state, selectedInvitation: action.selectedInvitation};
+    case EVENT_WIZARD_PREVIOUS:
+      return {...state, selectedWizardIndex: action.selectedWizardIndex};
+    case EVENT_WIZARD_NEXT:
+      return {...state, selectedWizardIndex: action.selectedWizardIndex};
+    // case WIZARD_NAVIGATE:
+      //return {...state, selectedInvitation: action.selectedInvitation};
     // case EVENTS_LIST:
     //   return {...state, selectedEvents: [], eventsGetting: true};
     // case EVENTS_LIST_SUCCESS:

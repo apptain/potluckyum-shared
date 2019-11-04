@@ -6,16 +6,13 @@ const StepButtons = (props) => {
 
   return (
     <div>
-      {props.selectedIndex > 0 &&
         <Button
-          onClick={props.handleBack}
+          onClick={props.previous}
           className={props.classes.backButton}
           size='large'
-          onClick={props.back}
         >
           Back
         </Button>
-      }
       <Button
         variant="contained"
         color="primary"
