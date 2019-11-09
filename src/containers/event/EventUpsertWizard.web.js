@@ -22,6 +22,8 @@ import Form from "react-jsonschema-form";
 import formWidgets from "../../schemaform/widgets";
 import CustomFieldTemplate from "../../schemaform/CustomFieldTemplate";
 
+import Collapsible from 'react-collapsible';
+
 import {
   EVENT_WIZARD_CREATE,
   EVENT_WIZARD_UPDATE,
@@ -34,6 +36,7 @@ import {
 
 import eventSchema from "../../schemas/event/eventSchema";
 import eventUISchema from "../../schemas/event/eventUISchema";
+import Typography from "@material-ui/core/Typography";
 
 const EventUpsertWizardContainer = (props) => {
   //classes injected with theme
@@ -49,7 +52,6 @@ const EventUpsertWizardContainer = (props) => {
   const dispatch = useDispatch();
   const machine =  configureMachine();
 
-  debugger;
   const [state, send] = useMachine(machine, {
     context: {
       eventsState
@@ -86,9 +88,49 @@ const EventUpsertWizardContainer = (props) => {
 
   const wizardSteps = [];
 
+  //Composite selected event will seperate the entry by
+  //schema in rsjf terms and be used for review step
+  const selectedEventComposite = {};
+
+  debugger;
+
+  const reviewAndCreateField = (name, value) => (
+    <Typography {...props} gutterBottom>
+      <label>{name}</label>
+      <span>{props.value}</span>
+    </Typography>
+  );
+
+  const createFields = (schema) => {
+    let fields = [];
+
+    for(const propName in schema) {
+      fields.push(reviewAndCreateField(propName, schema[propName]));
+    }
+
+    return fields;
+  }
+
+  const reviewAndCreateSection = (name, schema) => (
+     <Collapsible tabIndex={0} trigger={name}>
+       {createFields(schema)}
+     </Collapsible>
+  );
+
+  const reviewAndCreateSections = [];
+
   for(const name in schemaProperties) {
-    const val = schemaProperties[name];
-    wizardSteps.push(val);
+    const step = schemaProperties[name];
+    selectedEventComposite[name] = {};
+    wizardSteps.push(step);
+    reviewAndCreateSections.push(reviewAndCreateSection(name, step))
+
+    //todo refactor
+    for(const propName in step) {
+      selectedEventComposite[name][propName] = step[propName];
+    }
+
+
 
     // const props = {};
     // props.schema = val.schema;
@@ -102,6 +144,7 @@ const EventUpsertWizardContainer = (props) => {
     // propertyName is what you want
     // you can get the value like this: myObject[propertyName]
   }
+
 
   //+1 to our wizard steps
   const wizardStepsCount = wizardSteps.length;
@@ -171,7 +214,11 @@ const EventUpsertWizardContainer = (props) => {
                         <StepLabel>Review and Create</StepLabel>
                       </MaterialStep>
                     </Stepper>
-                    {FullForm(selectedSchema, eventUISchema(), selectedEvent)}
+                    {selectedWizardIndex + 1 < wizardStepsCount ?
+                      FullForm(selectedSchema, eventUISchema(), selectedEvent) :
+                      <h1>Bla</h1>
+                    }
+
 
                     <Box
                       bgcolor="background.paper"
@@ -186,10 +233,10 @@ const EventUpsertWizardContainer = (props) => {
                         selectedIndex={selectedWizardIndex}
                         classes={classes}
                         previous={(e) => send({dispatch, type: EVENT_WIZARD_PREVIOUS, selectedWizardIndex, wizardStepsCount })}
-                        next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
-                        // cancel={send({dispatch, type: EVENT_WIZARD_CANCEL})}
+                        // next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
+                        // cancel={(e) => send({dispatch, type: EVENT_WIZARD_NEXT}
                         // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
-                        // create={send({dispatch, type: EVENT_WIZARD_CREATE})}
+                        // createOrUpdate={send({dispatch, type: EVENT_WIZARD_CREATE})}
                         // update={send({dispatch, type: EVENT_WIZARD_UPDATE})}
                         // deleted={send({dispatch, type: EVENT_WIZARD_DELETE})}
                       />

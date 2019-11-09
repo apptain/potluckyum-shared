@@ -120,7 +120,7 @@ const guards = {
     return true;
   },
   eventWizardShouldMoveNext: (ctx, {selectedWizardIndex, wizardStepsCount}) => {
-    return selectedWizardIndex < wizardStepsCount - 2;
+    return selectedWizardIndex < wizardStepsCount - 1;
   },
   eventWizardShouldMovePrevious: (ctx, {selectedWizardIndex, wizardStepsCount}) => {
     return selectedWizardIndex > 0;
