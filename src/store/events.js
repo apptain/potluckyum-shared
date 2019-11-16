@@ -62,7 +62,7 @@ export const actions = {
 
   eventChange: (ctx, { dispatch, changes }) =>
   {
-    debugger;
+
     dispatch({
       type: EVENT_CHANGE,
       selectedEvent: {...ctx.selectedEvent, ...changes}
@@ -77,7 +77,6 @@ export const actions = {
   },
   eventWizardPrevious: (ctx, { dispatch, selectedWizardIndex }) =>
   {
-    debugger;
     dispatch({
       type: EVENT_WIZARD_PREVIOUS,
       selectedWizardIndex: selectedWizardIndex - 1
@@ -85,7 +84,6 @@ export const actions = {
   },
   eventWizardNext: (ctx, { dispatch, selectedWizardIndex }) =>
   {
-    debugger;
     dispatch({
       type: EVENT_WIZARD_NEXT,
       selectedWizardIndex:  selectedWizardIndex + 1
@@ -108,7 +106,7 @@ export const actions = {
 const guards = {
   shouldCreateNewEvent: (ctx, event) => {
     //TODO
-    debugger;
+
     return true;
   },
   shouldUpdateEvent: (ctx, event) => {
@@ -195,7 +193,7 @@ export default function reducer(state = initialState, action = {}) {
   //state = initialState;
   switch (action.type) {
     case EVENT_CHANGE:
-      debugger;
+
       return {...state, selectedEvent: action.selectedEvent};
     case INVITATION_CHANGE:
       return {...state, selectedInvitation: action.selectedInvitation};

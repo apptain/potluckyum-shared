@@ -29,10 +29,6 @@ export default () => {
           "location"
         ],
         "properties": {
-          "newField": {
-            "type": "string",
-            "title": "New Field"
-          },
           "location": {
             "type": "string",
             "title": "Location"

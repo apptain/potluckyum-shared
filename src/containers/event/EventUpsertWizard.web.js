@@ -23,6 +23,7 @@ import formWidgets from "../../schemaform/widgets";
 import CustomFieldTemplate from "../../schemaform/CustomFieldTemplate";
 
 import Collapsible from 'react-collapsible';
+import validateFormData, { isValid, toErrorList } from "react-jsonschema-form/lib/validate";
 
 import {
   EVENT_WIZARD_CREATE,
@@ -48,7 +49,6 @@ const EventUpsertWizardContainer = (props) => {
   //const selectedWizardIndex = Object.getOwnPropertyNames(wizardState.EventWizard.steps).findIndex(p => p == wizardState.EventWizard.currentStep);
   const selectedWizardIndex = eventsState.selectedWizardIndex || 0;
 
-
   const dispatch = useDispatch();
   const machine =  configureMachine();
 
@@ -64,7 +64,8 @@ const EventUpsertWizardContainer = (props) => {
   });
 
   const selectedEventChange = ({formData}) => {
-    debugger;
+    selectedEvent
+
     send({
       type: EVENT_CHANGE,
       dispatch,
@@ -92,7 +93,7 @@ const EventUpsertWizardContainer = (props) => {
   //schema in rsjf terms and be used for review step
   const selectedEventComposite = {};
 
-  debugger;
+
 
   const reviewAndCreateField = (name, value) => (
     <Typography {...props} gutterBottom>
@@ -118,6 +119,10 @@ const EventUpsertWizardContainer = (props) => {
   );
 
   const reviewAndCreateSections = [];
+  const validationErrors = [];
+
+  //TODO move validations
+
 
   for(const name in schemaProperties) {
     const step = schemaProperties[name];
@@ -128,9 +133,27 @@ const EventUpsertWizardContainer = (props) => {
     //todo refactor
     for(const propName in step) {
       selectedEventComposite[name][propName] = step[propName];
+
+      const eUiSche = eventUISchema();
+
+
     }
 
+    // const
+    // const { definitions } = this.getRegistry();
+    // const resolvedSchema = retrieveSchema(schema, definitions, formData);
 
+
+    // const validationErrors =  step.validateFormData(selectedEvent[name],
+    //   eventUISchema());
+    //
+    // debugger;
+
+    // const errors =  validateFormData(
+    //   formData,
+    //   resolvedSchema,
+    //   validate
+    // );
 
     // const props = {};
     // props.schema = val.schema;
@@ -144,6 +167,13 @@ const EventUpsertWizardContainer = (props) => {
     // propertyName is what you want
     // you can get the value like this: myObject[propertyName]
   }
+
+  const result = validateFormData(
+    selectedEventComposite,
+    schema
+  );
+  const errors = result.errors;
+  const errorSchema = result.errorSchema;
 
 
   //+1 to our wizard steps
@@ -216,10 +246,8 @@ const EventUpsertWizardContainer = (props) => {
                     </Stepper>
                     {selectedWizardIndex + 1 < wizardStepsCount ?
                       FullForm(selectedSchema, eventUISchema(), selectedEvent) :
-                      <h1>Bla</h1>
+                      <div>reviewAndCreateSections()</div>
                     }
-
-
                     <Box
                       bgcolor="background.paper"
                       color="text.primary"
@@ -233,7 +261,8 @@ const EventUpsertWizardContainer = (props) => {
                         selectedIndex={selectedWizardIndex}
                         classes={classes}
                         previous={(e) => send({dispatch, type: EVENT_WIZARD_PREVIOUS, selectedWizardIndex, wizardStepsCount })}
-                        // next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
+                        next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
+
                         // cancel={(e) => send({dispatch, type: EVENT_WIZARD_NEXT}
                         // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
                         // createOrUpdate={send({dispatch, type: EVENT_WIZARD_CREATE})}

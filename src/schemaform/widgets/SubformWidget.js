@@ -7,7 +7,7 @@ import formWidgets from "./index";
 import CustomFieldTemplate from "../customFieldTemplate";
 
 const SubformWidget = (props) => {
-  debugger;
+
   return (
     <Grid>
       <Form

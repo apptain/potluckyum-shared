@@ -98,12 +98,12 @@
 //   const wizardActions = {
 //     //back and next handled in container, but could move to statecharts
 //     back: (step, jumpToStep) => {
-//       debugger;
+//
 //       //wizardReduxActions.previous();
 //       //jumpToStep(step - 1);
 //     },
 //     next: (step, jumpToStep) => {
-//       debugger;
+//
 //       nextStep("")
 //       //wizardReduxActions.next();
 //
@@ -165,7 +165,7 @@
 //   const selectedSchema = schemaProperties[wizardState.EventWizard.currentStep];
 //
 //   for(const name in schemaProperties) {
-//     debugger;
+//
 //     const val = schemaProperties[name];
 //     //wizardSteps.push(val);
 //     registerStep(name, {
@@ -177,10 +177,10 @@
 //   }
 //
 //   // Object.getOwnPropertyNames(schemaProperties).forEach((x,i) => {
-//   //   debugger;
+//   //
 //   //
 //   // });
-//   // debugger;
+//   //
 //
 //   const EventDescriptionStep = () => <EventDescription index={0} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
 //   const EventLocationStep = () => <EventLocation index={1} classes={classes} selectedEvent={selectedEvent} selectedEventChange={selectedEventChangeDebounced} />;
@@ -190,7 +190,7 @@
 //   const EventReviewAndCreateStep = () => <EventRequests index={4} classes={classes} selectedEvent={selectedEvent}  />;
 //
 //   const FullForm = (schema, uiSchema) => {
-//     debugger;
+//
 //     return (
 //       <Form
 //         safeRenderCompletion={true}
@@ -210,7 +210,7 @@
 //     );
 //   }
 //
-//   debugger;
+//
 //
 //   return (
 //     <React.Fragment>
