@@ -2,25 +2,27 @@ import React, { PropTypes } from 'react';
 
 export default () => {
   return {
-    "title": "Invitation",
+    "title": "Invitation RSVP",
     "type": "object",
     "required": [
-      "name",
-      "secretQuestion",
-      "secretAnswer"
+      "willAttend"
     ],
     "properties": {
-      "username": {
+      "preferredName": {
         "type": "string",
-        "title": "User Name"
+        "title": "preferredName"
       },
-      "phoneNumber": {
+      "willAttend": {
         "type": "string",
         "title": "Phone Number"
       },
-      "email": {
+      "message": {
         "type": "string",
-        "title": "Email"
+        "title": "Message"
+      },
+      "willBring": {
+        "type": "string",
+        "title": "Will Bring"
       }
     }
   };

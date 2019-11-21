@@ -9,18 +9,16 @@ import { createMuiTheme } from '@material-ui/core/styles';
 
 import { blue, indigo } from '@material-ui/core/colors';
 
-import setupApp from "./setup";
 
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import config from "./config";
 import "./index.css";
-import "react-stepzilla/src/css/main.css";
 import "react-table/react-table.css";
 
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import createStore from './redux/createStore';
+import configureStore from './configureStore';
 
 const theme = createMuiTheme({
   palette: {
@@ -76,11 +74,8 @@ Amplify.configure({
   }
 });
 
-
-
 export default function(props) {
-
-  const store = createStore();
+  const store = configureStore();
   return(
     <Router>
       <MuiThemeProvider>

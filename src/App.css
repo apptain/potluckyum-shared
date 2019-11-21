@@ -6,6 +6,9 @@
   font-weight: bold;
 }
 
-ol.progtrckr li {
-  width: 20%;
+ol.progtrckr {
+  position: absolute;
+  top:1%;
+  left: 10%;
 }
+

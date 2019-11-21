@@ -5,18 +5,17 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { eventCreate, eventUpdate } from '../../redux/modules/events';
 
-import StepZilla from 'react-stepzilla';
-import EventDescription from './steps/EventDescription';
-import EventLocation from './steps/EventLocation';
-import EventDateTime from './steps/EventDateTime';
-import EventInvitations from './steps/EventInvitations';
-import EventRequests from './steps/EventRequests';
+// import EventDescription from './steps/EventDescription';
+// import EventLocation from './steps/EventLocation';
+// import EventDateTime from './steps/EventDateTime';
+// import EventInvitations from './steps/EventInvitations';
+// import EventRequests from './steps/EventRequests';
 
 
 @connect(state => ({ event: state.events.selectedEvent }), dispatch => ({actions: bindActionCreators({eventCreate, eventUpdate}, dispatch)}))
 export default class EventUpsertWizard extends Component {
   eventUpdate(formData) {
-    debugger;
+
     this.props.actions.eventUpdate(formData);
     //this.props.jumpToStep(2);
 

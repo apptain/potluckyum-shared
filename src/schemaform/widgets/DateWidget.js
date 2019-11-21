@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import DatePicker from 'react-date-picker';
 
+import "react-date-picker/src/DatePicker.less";
+
 function DateWidget(props) {
   const {
     onChange,

@@ -2,18 +2,15 @@ import React, { PropTypes } from 'react';
 
 export default function() {
   return {
-    "username": {
+    "preferredName": {
+      "ui:title": "Prefer Name",
+      "ui:description": "You can use aliases later if you like",
+      "type": "string",
+      "title": "preferredName"
+    },
+    "willAttend": {
       "ui:autofocus": true,
-      "ui:title": "User Name",
-      "ui:description": "You can use aliases later if you like"
-    },
-    "phoneNumber": {
-      "ui:title": "Phone Number",
-      "ui:description": "Not required, but we'll encrypt it and text with it as from"
-    },
-    "email": {
-      "ui:title": "Email",
-      "ui:description": "Not required, but we'll encrypt it and email with it as from"
+      "ui:title": "Will Attend"
     }
   }
 }
