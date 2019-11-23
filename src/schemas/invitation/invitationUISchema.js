@@ -2,18 +2,25 @@ import React, { PropTypes } from 'react';
 
 export default function() {
   return {
-    "username": {
+    "name": {
       "ui:autofocus": true,
-      "ui:title": "User Name",
-      "ui:description": "You can use aliases later if you like"
+      "ui:title": "Name"
     },
     "phoneNumber": {
       "ui:title": "Phone Number",
-      "ui:description": "Not required, but we'll encrypt it and text with it as from"
+      "classNames": "col-sm-6 clear"
     },
     "email": {
       "ui:title": "Email",
-      "ui:description": "Not required, but we'll encrypt it and email with it as from"
+      "classNames": "col-sm-6 clear"
+    },
+    "message": {
+      "type": "string",
+      "title": "Message"
+    },
+    "status": {
+      "ui:widget": "HiddenWidget",
+      "hidden": "true"
     }
   }
 }

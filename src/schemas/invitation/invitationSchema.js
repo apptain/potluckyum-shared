@@ -5,14 +5,12 @@ export default () => {
     "title": "Invitation",
     "type": "object",
     "required": [
-      "name",
-      "secretQuestion",
-      "secretAnswer"
+      "name"
     ],
     "properties": {
-      "username": {
+      "name": {
         "type": "string",
-        "title": "User Name"
+        "title": "Name"
       },
       "phoneNumber": {
         "type": "string",
@@ -28,6 +26,7 @@ export default () => {
       },
       "status": {
         "type": "string",
+        "hidden": "true",
         "enum": ["new", "sent", "confirmed", "declined"]
       }
     }

@@ -22,7 +22,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 export default function(props) {
-  debugger;
+
   const [editing, setEditing] = useState(null);
   const [eventFormModalIsOpen, eventFormModalToggle ] = useState(false);
 
@@ -73,13 +73,12 @@ export default function(props) {
       getProps: getActionProps,
       Cell: ActionsCell
     },
-    { Header: "Name",  accessor: "inviteeName", ...editableColumnProps,filterable: false, maxWidth: 220 },
+    { Header: "Name",  accessor: "name", ...editableColumnProps,filterable: false, maxWidth: 220 },
     { Header: "Email or Phone", accessor: "phoneNumberOrEmail", ...editableColumnProps, filterable: false, maxWidth: 280 },
     { Header: "Message", accessor: "message",  ...editableColumnProps, filterable: false }
   ];
-
   const handleSubmit = ({formData}) => {
-
+    debugger;
     const event = props.selectedEvent;
     if(!event.invitations) {
       event.invitations = [];
@@ -88,9 +87,9 @@ export default function(props) {
     invitations = invitations.filter(function(item){
       return !!item;
     });
-    invitations.push(formData);
-    event.invitations = invitations;
-    props.selectedEventUpdate(event);
+    //invitations.push(formData);
+    // event.invitations = invitations;
+    // props.selectedEventUpdate(event);
     //props.jumpToStep(1);
   };
 
@@ -101,7 +100,6 @@ export default function(props) {
 
   const { classes, schema, uiSchema } = props;
 
-  debugger;
   return (
     <React.Fragment>
       <Grid container justify="center">
@@ -115,14 +113,14 @@ export default function(props) {
               formData={ props.selectedInvitation }
               schema={schema}
               uiSchema={uiSchema}
-              //onChange={props.invitation}
+              onChange={props.onSelectedInvitationChange}
               //onSubmit={handleSubmit}
               widgets={formWidgets}
               FieldTemplate={CustomFieldTemplate}
             >
               <div className={""}>
                 <button type="button"><MdCancel/></button>
-                <button type="submit"><MdDone/></button>
+                <button type="submit" onClick={props.invitationAdd}><MdDone/></button>
               </div>
             </Form>
           }

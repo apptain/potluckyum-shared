@@ -2,6 +2,9 @@ import {Machine} from "xstate";
 
 export const EVENT_CHANGE = '@potluckyum/EVENT_CHANGE';
 export const INVITATION_CHANGE = '@potluckyum/INVITATION_CHANGE';
+export const INVITATION_ADD = '@potluckyum/INVITATION_ADD';
+export const INVITATION_REMOVE = '@potluckyum/INVITATION_REMOVE';
+export const INVITATION_CANCEL = '@potluckyum/INVITATION_CANCEL';
 
 export const EVENT_GET_CALL = '@potluck/EVENT_GET_CALL';
 export const EVENT_GET_CALL_SUCCESS = '@potluck/EVENT_GET_CALL_SUCCESS';
@@ -62,18 +65,32 @@ export const actions = {
 
   eventChange: (ctx, { dispatch, changes }) =>
   {
-
     dispatch({
       type: EVENT_CHANGE,
       selectedEvent: {...ctx.selectedEvent, ...changes}
     });
   },
-  invitationChange: (ctx, { changes }) =>
+  invitationChange: (ctx, { dispatch, changes }) =>
   {
-    return {
-      type: EVENT_CHANGE,
-      selectedEvent: {...ctx.selectedEvent, ...changes}
+    debugger;
+    dispatch({
+      type: INVITATION_CHANGE,
+      selectedInvitation: {...ctx.selectedInvitation, ...changes}
+    });
+  },
+  invitationAdd: (ctx, { dispatch }) =>
+  {
+    debugger;
+    const {selectedEvent, selectedInvitation} = ctx.eventsState;
+    if(!selectedEvent.invitations) {
+      selectedEvent.invitations = [];
     }
+    selectedEvent.invitations.push( selectedInvitation);
+    dispatch({
+      type: INVITATION_ADD,
+      selectedEvent,
+      selectedInvitation: {}
+    });
   },
   eventWizardPrevious: (ctx, { dispatch, selectedWizardIndex }) =>
   {
@@ -157,6 +174,12 @@ const flowMachine = Machine({
         [EVENT_CHANGE]: {
           actions: 'eventChange',
         },
+        [INVITATION_CHANGE]: {
+          actions: 'invitationChange',
+        },
+        [INVITATION_ADD]: {
+          actions: 'invitationAdd',
+        },
         [EVENT_WIZARD_PREVIOUS]: {
           cond: 'eventWizardShouldMovePrevious',
           actions: 'eventWizardPrevious'
@@ -195,7 +218,11 @@ export default function reducer(state = initialState, action = {}) {
     case EVENT_CHANGE:
       return {...state, selectedEvent: action.selectedEvent};
     case INVITATION_CHANGE:
+      debugger;
       return {...state, selectedInvitation: action.selectedInvitation};
+    case INVITATION_ADD:
+      debugger;
+      return {...state, selectedEvent: action.selectedEvent, selectedInvitation: action.selectedInvitation};
     case EVENT_WIZARD_PREVIOUS:
       return {...state, selectedWizardIndex: action.selectedWizardIndex};
     case EVENT_WIZARD_NEXT:

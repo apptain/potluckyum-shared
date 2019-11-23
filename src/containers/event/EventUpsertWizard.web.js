@@ -33,13 +33,13 @@ import {
   EVENT_WIZARD_CANCEL,
   EVENT_WIZARD_REVIEW,
   EVENT_WIZARD_DELETE,
-  EVENT_CHANGE, INVITATION_CHANGE, configureMachine } from '../../store/events';
+  EVENT_CHANGE, INVITATION_CHANGE, INVITATION_ADD, INVITATION_CANCEL, INVITATION_REMOVE, configureMachine } from '../../store/events';
 
 import eventSchema from "../../schemas/event/eventSchema";
 import eventUISchema from "../../schemas/event/eventUISchema";
+import invitationUISchema from "../../schemas/invitation/invitationUISchema";
 import Typography from "@material-ui/core/Typography";
 import EventInvitations from "./EventInvitations";
-import wizard from "../../../../potluckyum-share-bu/src/redux/modules/wizard";
 
 const EventUpsertWizardContainer = (props) => {
   //classes injected with theme
@@ -47,7 +47,6 @@ const EventUpsertWizardContainer = (props) => {
 
   //redux wire up
   const eventsState = useSelector(state => { return state.events});
-  const wizardState = useSelector(state => {  return state.wizards});
   //const selectedWizardIndex = Object.getOwnPropertyNames(wizardState.EventWizard.steps).findIndex(p => p == wizardState.EventWizard.currentStep);
   const selectedWizardIndex = eventsState.selectedWizardIndex || 0;
 
@@ -66,8 +65,7 @@ const EventUpsertWizardContainer = (props) => {
   });
 
   const selectedEventChange = ({formData}) => {
-    selectedEvent
-
+    debugger;
     send({
       type: EVENT_CHANGE,
       dispatch,
@@ -76,6 +74,7 @@ const EventUpsertWizardContainer = (props) => {
   };
 
   const invitationChange = ({formData}) => {
+    debugger;
     send({
       type: INVITATION_CHANGE,
       dispatch,
@@ -83,7 +82,17 @@ const EventUpsertWizardContainer = (props) => {
     });
   };
 
+  const invitationAdd = () => {
+    send({
+      type: INVITATION_ADD,
+      dispatch,
+      selectedInvitation
+    });
+  };
+
   const { selectedEvent, selectedInvitation } = eventsState;
+
+  debugger;
 
   const schema = eventSchema();
   const schemaProperties = schema.properties;
@@ -139,6 +148,7 @@ const EventUpsertWizardContainer = (props) => {
       selectedEventComposite[name][propName] = step[propName];
 
 
+
       //const eUiSche = eventUISchema();
 
 
@@ -186,7 +196,28 @@ const EventUpsertWizardContainer = (props) => {
     );
   }
 
-  debugger;
+
+
+  var style = {
+    backgroundColor: "#F8F8F8",
+    borderTop: "1px solid #E7E7E7",
+    textAlign: "center",
+    padding: "20px",
+    position: "fixed",
+    left: "0",
+    bottom: "0",
+    height: "60px",
+    width: "100%",
+  }
+
+  var phantom = {
+    display: 'block',
+    padding: '20px',
+    height: '60px',
+    width: '100%',
+  }
+
+  const invitationUiSchemaInstance = invitationUISchema();
 
   //TODO clear up gridlock...
   return (
@@ -221,7 +252,15 @@ const EventUpsertWizardContainer = (props) => {
                       </MaterialStep>
                     </Stepper>
                     {selectedWizardIndex + 1 < wizardStepsCount ?
-                      stepNames[selectedWizardIndex] === 'invitations' ? <EventInvitations schema={wizardSteps['invitiations']} uiSchema={eventUISchema()} selectedEvent={selectedEvent}/> :
+                      stepNames[selectedWizardIndex] === 'invitations' ?
+                        <EventInvitations
+                          schema={schemaProperties['invitations'].items}
+                          uiSchema={invitationUiSchemaInstance}
+                          selectedEvent={selectedEvent}
+                          selectedInvitation={selectedInvitation}
+                          onSelectedInvitationChange = { invitationChangeDebounced }
+                          invitationAdd = { invitationAdd }
+                        /> :
                       FullForm(selectedSchema, eventUISchema(), selectedEvent) :
                       <div>reviewAndCreateSections()</div>
                     }
@@ -234,18 +273,25 @@ const EventUpsertWizardContainer = (props) => {
                       left="10%"
                       zIndex="modal"
                     >
-                      <StepButtons
-                        selectedIndex={selectedWizardIndex}
-                        classes={classes}
-                        previous={(e) => send({dispatch, type: EVENT_WIZARD_PREVIOUS, selectedWizardIndex, wizardStepsCount })}
-                        next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
+                      <div>
+                        <div style={phantom} />
+                        <div style={style}>
+                          <StepButtons
+                            selectedIndex={selectedWizardIndex}
+                            classes={classes}
+                            previous={(e) => send({dispatch, type: EVENT_WIZARD_PREVIOUS, selectedWizardIndex, wizardStepsCount })}
+                            next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
 
-                        // cancel={(e) => send({dispatch, type: EVENT_WIZARD_NEXT}
-                        // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
-                        // createOrUpdate={send({dispatch, type: EVENT_WIZARD_CREATE})}
-                        // update={send({dispatch, type: EVENT_WIZARD_UPDATE})}
-                        // deleted={send({dispatch, type: EVENT_WIZARD_DELETE})}
-                      />
+                            // cancel={(e) => send({dispatch, type: EVENT_WIZARD_NEXT}
+                            // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
+                            // createOrUpdate={send({dispatch, type: EVENT_WIZARD_CREATE})}
+                            // update={send({dispatch, type: EVENT_WIZARD_UPDATE})}
+                            // deleted={send({dispatch, type: EVENT_WIZARD_DELETE})}
+                          />
+                        </div>
+                      </div>
+
+
                     </Box>
                   </Grid>
                 </Grid>
