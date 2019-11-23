@@ -80,7 +80,7 @@ export const actions = {
   },
   invitationAdd: (ctx, { dispatch }) =>
   {
-    debugger;
+
     const {selectedEvent, selectedInvitation} = ctx.eventsState;
     if(!selectedEvent.invitations) {
       selectedEvent.invitations = [];
@@ -218,10 +218,8 @@ export default function reducer(state = initialState, action = {}) {
     case EVENT_CHANGE:
       return {...state, selectedEvent: action.selectedEvent};
     case INVITATION_CHANGE:
-      debugger;
       return {...state, selectedInvitation: action.selectedInvitation};
     case INVITATION_ADD:
-      debugger;
       return {...state, selectedEvent: action.selectedEvent, selectedInvitation: action.selectedInvitation};
     case EVENT_WIZARD_PREVIOUS:
       return {...state, selectedWizardIndex: action.selectedWizardIndex};

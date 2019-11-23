@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import Button from "@material-ui/core/Button";
 
 const StepButtons = (props) => {
+  const errorLineItem = (error) => {
+    return <li></li>;
+  };
 
   return (
     <div>
@@ -29,30 +32,36 @@ const StepButtons = (props) => {
       >
         Cancel
       </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        size='large'
-        onClick={props.review}
-      >
-        Review and Create or Update
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        size='large'
-        onClick={props.create}
-      >
-        Review and Create or Update
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        size='large'
-        onClick={props.update}
-      >
-        Review and Create or Update
-      </Button>
+
+      {
+        !props.errors.length ?
+          <Button
+            variant="contained"
+            color="primary"
+            size='large'
+            // onClick={props.upsert}
+          >
+            Create or Update
+          </Button> :
+          <Button>
+            <label>Errors: </label>
+
+              <div>
+                <ul>
+                  {
+                    props.errors.map(error =>
+                      <li>
+                        <label>Error</label>
+                        <label>{error.property}:</label>
+                        <span>{error.message}</span>
+                      </li>
+                    )
+                  }
+                </ul>
+              </div>
+
+          </Button>
+      }
     </div>
   );
 }

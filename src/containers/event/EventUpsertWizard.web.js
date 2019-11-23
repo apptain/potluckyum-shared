@@ -65,7 +65,7 @@ const EventUpsertWizardContainer = (props) => {
   });
 
   const selectedEventChange = ({formData}) => {
-    debugger;
+
     send({
       type: EVENT_CHANGE,
       dispatch,
@@ -74,7 +74,7 @@ const EventUpsertWizardContainer = (props) => {
   };
 
   const invitationChange = ({formData}) => {
-    debugger;
+
     send({
       type: INVITATION_CHANGE,
       dispatch,
@@ -92,7 +92,7 @@ const EventUpsertWizardContainer = (props) => {
 
   const { selectedEvent, selectedInvitation } = eventsState;
 
-  debugger;
+
 
   const schema = eventSchema();
   const schemaProperties = schema.properties;
@@ -108,22 +108,22 @@ const EventUpsertWizardContainer = (props) => {
   const reviewAndCreateField = (name, value) => (
     <Typography {...props} gutterBottom>
       <label>{name}</label>
-      <span>{props.value}</span>
+      <span>{value}</span>
     </Typography>
   );
 
   const createFields = (schema) => {
     let fields = [];
 
-    for(const propName in schema) {
-      fields.push(reviewAndCreateField(propName, schema[propName]));
+    for(const propName in schema.properties) {
+      fields.push(reviewAndCreateField(propName, selectedEvent[propName]));
     }
 
     return fields;
   }
 
   const reviewAndCreateSection = (name, schema) => (
-     <Collapsible tabIndex={0} trigger={name}>
+     <Collapsible tabIndex={0} trigger={name} open={true}>
        {createFields(schema)}
      </Collapsible>
   );
@@ -132,7 +132,6 @@ const EventUpsertWizardContainer = (props) => {
   const validationErrors = [];
 
   //TODO move validations
-
   const stepNames = [];
 
   for(const name in schemaProperties) {
@@ -141,27 +140,25 @@ const EventUpsertWizardContainer = (props) => {
     selectedEventComposite[name] = {};
     wizardSteps.push(step);
 
-    // reviewAndCreateSections.push(reviewAndCreateSection(name, step));
-
     //todo refactor
-    for(const propName in step) {
-      selectedEventComposite[name][propName] = step[propName];
-
-
-
-      //const eUiSche = eventUISchema();
-
-
+    for(const propName in step.properties) {
+      selectedEventComposite[name][propName] = selectedEvent[propName];
     }
+
+    reviewAndCreateSections.push(reviewAndCreateSection(name, step));
   }
+
+  debugger;
 
   const result = validateFormData(
     selectedEventComposite,
     schema
   );
-  const errors = result.errors;
+  const errorsList = result.errors;
+  console.log(JSON.stringify((errorsList)));
   const errorSchema = result.errorSchema;
 
+  debugger;
   //+1 to our wizard steps
   const wizardStepsCount = wizardSteps.length;
   const selectedSchema = wizardSteps[selectedWizardIndex];
@@ -219,6 +216,8 @@ const EventUpsertWizardContainer = (props) => {
 
   const invitationUiSchemaInstance = invitationUISchema();
 
+  debugger;
+
   //TODO clear up gridlock...
   return (
     <React.Fragment>
@@ -260,9 +259,10 @@ const EventUpsertWizardContainer = (props) => {
                           selectedInvitation={selectedInvitation}
                           onSelectedInvitationChange = { invitationChangeDebounced }
                           invitationAdd = { invitationAdd }
+                          errors = { errorsList }
                         /> :
                       FullForm(selectedSchema, eventUISchema(), selectedEvent) :
-                      <div>reviewAndCreateSections()</div>
+                      <div>{reviewAndCreateSections}</div>
                     }
                     <Box
                       bgcolor="background.paper"
@@ -277,6 +277,7 @@ const EventUpsertWizardContainer = (props) => {
                         <div style={phantom} />
                         <div style={style}>
                           <StepButtons
+                            errors={errorsList}
                             selectedIndex={selectedWizardIndex}
                             classes={classes}
                             previous={(e) => send({dispatch, type: EVENT_WIZARD_PREVIOUS, selectedWizardIndex, wizardStepsCount })}
@@ -284,7 +285,8 @@ const EventUpsertWizardContainer = (props) => {
 
                             // cancel={(e) => send({dispatch, type: EVENT_WIZARD_NEXT}
                             // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
-                            // createOrUpdate={send({dispatch, type: EVENT_WIZARD_CREATE})}
+                            createOrUpdate={send({dispatch, type: EVENT_WIZARD_CREATE})}
+
                             // update={send({dispatch, type: EVENT_WIZARD_UPDATE})}
                             // deleted={send({dispatch, type: EVENT_WIZARD_DELETE})}
                           />

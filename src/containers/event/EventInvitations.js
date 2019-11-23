@@ -78,7 +78,7 @@ export default function(props) {
     { Header: "Message", accessor: "message",  ...editableColumnProps, filterable: false }
   ];
   const handleSubmit = ({formData}) => {
-    debugger;
+
     const event = props.selectedEvent;
     if(!event.invitations) {
       event.invitations = [];
