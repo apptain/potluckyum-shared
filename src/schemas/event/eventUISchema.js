@@ -18,20 +18,25 @@ export default () => {
       "type": "string",
       "title": "Will Bring"
     },
-
     "name": {
-      "ui:autofocus": true
+      "ui:autofocus": true,
+
     },
     "description": {
       "ui:title": "Description",
       "ui:description": "What are we celebrating?"
     },
+    "date": {
+      "ui:title": "Date",
+      "ui:widget": "date"
+    },
     "startTime": {
-      "ui:title": "Start Date and Time"
+      "ui:title": "Start Time",
+      "ui:widget": "time"
     },
     "endTime": {
-      "ui:title": "End Date and Time",
-      "ui:description": "You don't have to end"
+      "ui:title": "End Time",
+      "ui:widget": "time"
     },
     "location": {
       "ui:title": "Pot Luck Location",

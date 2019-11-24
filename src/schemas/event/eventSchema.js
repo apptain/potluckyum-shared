@@ -55,8 +55,7 @@ export default () => {
         "title": "Potluck Event Date and Time",
         "type": "object",
         "required": [
-          "date",
-          "startTime",
+          "date"
         ],
         "properties": {
           "date": {
@@ -66,13 +65,11 @@ export default () => {
           },
           "startTime": {
             "type": "string",
-            "title": "Start Time",
-            "format": "date-time"
+            "title": "Start Time"
           },
           "endTime": {
             "type": "string",
-            "title": "End Time",
-            "format": "date-time"
+            "title": "End Time"
           }
         }
       },

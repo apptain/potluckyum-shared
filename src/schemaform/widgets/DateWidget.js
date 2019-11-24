@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import DatePicker from 'react-date-picker';
 
-import "react-date-picker/src/DatePicker.less";
+import "react-date-picker/dist/DatePicker.less";
 
 function DateWidget(props) {
   const {

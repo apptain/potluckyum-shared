@@ -72,16 +72,14 @@ export const actions = {
   },
   invitationChange: (ctx, { dispatch, changes }) =>
   {
-    debugger;
+
     dispatch({
       type: INVITATION_CHANGE,
       selectedInvitation: {...ctx.selectedInvitation, ...changes}
     });
   },
-  invitationAdd: (ctx, { dispatch }) =>
+  invitationAdd: (ctx, { dispatch, selectedEvent, selectedInvitation }) =>
   {
-
-    const {selectedEvent, selectedInvitation} = ctx.eventsState;
     if(!selectedEvent.invitations) {
       selectedEvent.invitations = [];
     }
@@ -138,7 +136,7 @@ const guards = {
     return selectedWizardIndex < wizardStepsCount - 1;
   },
   eventWizardShouldMovePrevious: (ctx, {selectedWizardIndex, wizardStepsCount}) => {
-    return selectedWizardIndex > 0;
+    return selectedWizardIndex > 0
   },
 };
 

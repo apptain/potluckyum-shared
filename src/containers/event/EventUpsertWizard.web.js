@@ -86,6 +86,7 @@ const EventUpsertWizardContainer = (props) => {
     send({
       type: INVITATION_ADD,
       dispatch,
+      selectedEvent,
       selectedInvitation
     });
   };
@@ -135,20 +136,26 @@ const EventUpsertWizardContainer = (props) => {
   const stepNames = [];
 
   for(const name in schemaProperties) {
+
     stepNames.push(name);
     const step = schemaProperties[name];
-    selectedEventComposite[name] = {};
     wizardSteps.push(step);
-
-    //todo refactor
-    for(const propName in step.properties) {
-      selectedEventComposite[name][propName] = selectedEvent[propName];
+    if(name == 'invitations'){
+      debugger;
+      selectedEventComposite['invitations'] = selectedEvent.invitations;
+    } else {
+      selectedEventComposite[name] = {};
+      //todo refactor
+      for(const propName in step.properties) {
+        selectedEventComposite[name][propName] =
+          selectedEvent[propName] instanceof Date ? selectedEvent[propName].toString() : selectedEvent[propName];
+      }
     }
 
     reviewAndCreateSections.push(reviewAndCreateSection(name, step));
   }
 
-  debugger;
+
 
   const result = validateFormData(
     selectedEventComposite,
@@ -203,7 +210,7 @@ const EventUpsertWizardContainer = (props) => {
     position: "fixed",
     left: "0",
     bottom: "0",
-    height: "60px",
+    height: "200px",
     width: "100%",
   }
 
