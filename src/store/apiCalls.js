@@ -50,6 +50,7 @@ export function eventUpdate(id, event) {
 }
 
 export function eventCreate(event) {
+  debugger;
   return API.post("events", `/events`, {
     body: event
   });
@@ -84,7 +85,14 @@ export function invitationUpdate(id, invitation) {
   });
 }
 
+export function invitationSend(eventId, invitation) {
+  return API.post("invitations", `/invitation`, {
+    body: {eventId, invitation}
+  });
+}
+
 export function invitationRsvp(id, invitation) {
+  debugger;
   return API.put("invitations", `/invitations/${id}`, {
     body: invitation
   });

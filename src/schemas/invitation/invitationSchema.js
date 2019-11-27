@@ -5,7 +5,8 @@ export default () => {
     "title": "Invitation",
     "type": "object",
     "required": [
-      "name"
+      "name",
+      "phoneNumber"
     ],
     "properties": {
       "name": {

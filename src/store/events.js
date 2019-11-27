@@ -1,30 +1,37 @@
 import {Machine} from "xstate";
 
 export const EVENT_CHANGE = '@potluckyum/EVENT_CHANGE';
+export const EVENT_CREATE = '@potluckyum/EVENT_CREATE';
+
 export const INVITATION_CHANGE = '@potluckyum/INVITATION_CHANGE';
 export const INVITATION_ADD = '@potluckyum/INVITATION_ADD';
+export const INVITATION_SEND = '@potluckyum/INVITATION_SEND';
 export const INVITATION_REMOVE = '@potluckyum/INVITATION_REMOVE';
 export const INVITATION_CANCEL = '@potluckyum/INVITATION_CANCEL';
 
-export const EVENT_GET_CALL = '@potluck/EVENT_GET_CALL';
-export const EVENT_GET_CALL_SUCCESS = '@potluck/EVENT_GET_CALL_SUCCESS';
-export const EVENT_GET_CALL_FAIL = '@potluck/EVENT_GET_CALL_FAIL';
+export const EVENT_GET_REQUEST = '@potluck/EVENT_GET_REQUEST';
+export const EVENT_GET_REQUEST_SUCCESS = '@potluck/EVENT_GET_REQUEST_SUCCESS';
+export const EVENT_GET_REQUEST_FAIL = '@potluck/EVENT_GET_REQUEST_FAIL';
 
-export const EVENT_POST_CALL = '@potluck/EVENT_POST_CALL';
-export const EVENT_POST_CALL_SUCCESS = '@potluck/EVENT_POST_CALL_SUCCESS';
-export const EVENT_POST_CALL_FAIL = '@potluck/EVENT_POST_CALL_FAIL';
+export const INVITATION_SEND_REQUEST = '@potluck/INVITATION_SEND_REQUEST';
+export const INVITATION_SEND_SUCCESS = '@potluck/INVITATION_SEND_SUCCESS';
+export const INVITATION_SEND_FAIL = '@potluck/INVITATION_SEND_FAIL';
 
-export const EVENT_PUT_CALL = '@potluck/EVENT_PUT_CALL';
-export const EVENT_PUT_CALL_SUCCESS = '@potluck/EVENT_PUT_CALL_SUCCESS';
-export const EVENT_PUT_CALL_FAIL = '@potluck/EVENT_PUT_CALL_FAIL';
+export const EVENT_POST_REQUEST = '@potluck/EVENT_POST_REQUEST';
+export const EVENT_POST_REQUEST_SUCCESS = '@potluck/EVENT_POST_REQUEST_SUCCESS';
+export const EVENT_POST_REQUEST_FAIL = '@potluck/EVENT_POST_REQUEST_FAIL';
 
-export const EVENT_PATCH_CALL = '@potluck/EVENT_PATCH_CALL';
-export const EVENT_PATCH_CALL_SUCCESS = '@potluck/EVENT_PATCH_CALL_SUCCESS';
-export const EVENT_PATCH_CALL_FAIL = '@potluck/EVENT_PATCH_CALL_FAIL';
+export const EVENT_PUT_REQUEST = '@potluck/EVENT_PUT_REQUEST';
+export const EVENT_PUT_REQUEST_SUCCESS = '@potluck/EVENT_PUT_REQUEST_SUCCESS';
+export const EVENT_PUT_REQUEST_FAIL = '@potluck/EVENT_PUT_REQUEST_FAIL';
 
-export const EVENT_DELETE_CALL = '@potluck/EVENT_DELETE_CALL';
-export const EVENT_DELETE_CALL_SUCCESS = '@potluck/EVENT_DELETE_CALL_SUCCESS';
-export const EVENT_DELETE_CALL_FAIL = '@potluck/EVENT_DELETE_CALL_FAIL';
+export const EVENT_PATCH_REQUEST = '@potluck/EVENT_PATCH_REQUEST';
+export const EVENT_PATCH_REQUEST_SUCCESS = '@potluck/EVENT_PATCH_REQUEST_SUCCESS';
+export const EVENT_PATCH_REQUEST_FAIL = '@potluck/EVENT_PATCH_REQUEST_FAIL';
+
+export const EVENT_DELETE_REQUEST = '@potluck/EVENT_DELETE_REQUEST';
+export const EVENT_DELETE_REQUEST_SUCCESS = '@potluck/EVENT_DELETE_REQUEST_SUCCESS';
+export const EVENT_DELETE_REQUEST_FAIL = '@potluck/EVENT_DELETE_REQUEST_FAIL';
 
 const initialContext = {
   selectedEvent: {},
@@ -99,9 +106,18 @@ export const actions = {
   },
   eventWizardNext: (ctx, { dispatch, selectedWizardIndex }) =>
   {
+    debugger;
     dispatch({
       type: EVENT_WIZARD_NEXT,
       selectedWizardIndex:  selectedWizardIndex + 1
+    });
+  },
+  eventCreate: (ctx, { dispatch, selectedEvent }) =>
+  {
+    //notify saga
+    dispatch({
+      type: EVENT_CREATE,
+      event: selectedEvent
     });
   },
   eventGet: (id) => {
@@ -113,8 +129,15 @@ export const actions = {
   eventUpdatePersist: (event) => {
     return {type: eventCreatePersist, event};
   },
-  invitationSend: () => {
-    return {type: invitationSend, id};
+  invitationSend: (ctx, { dispatch, selectedEvent, invitation }) =>
+  {
+    debugger;
+    //notify saga
+    dispatch({
+      type: INVITATION_SEND_REQUEST,
+      eventId: selectedEvent.id,
+      invitation
+    });
   }
 };
 
@@ -154,21 +177,6 @@ const flowMachine = Machine({
   states: {
     [EVENT_WIZARD_READY]: {
       on: {
-        [EVENT_WIZARD_CREATE]: {
-          target: EVENT_WIZARD_CREATE,
-          cond: 'shouldCreateNewEvent',
-        },
-        [EVENT_CHANGE]: {
-          actions: 'eventChange',
-        }
-        // [EVENT_WIZARD_UPDATE]: {
-        //   target: EVENT_WIZARD_UPDATE,
-        //   //cond: 'shouldCreateNewEvent',
-        // }
-      }
-    },
-    [EVENT_WIZARD_CREATE]: {
-      on: {
         [EVENT_CHANGE]: {
           actions: 'eventChange',
         },
@@ -178,6 +186,9 @@ const flowMachine = Machine({
         [INVITATION_ADD]: {
           actions: 'invitationAdd',
         },
+        [INVITATION_SEND]: {
+          actions: 'invitationSend',
+        },
         [EVENT_WIZARD_PREVIOUS]: {
           cond: 'eventWizardShouldMovePrevious',
           actions: 'eventWizardPrevious'
@@ -185,6 +196,10 @@ const flowMachine = Machine({
         [EVENT_WIZARD_NEXT]: {
           cond: 'eventWizardShouldMoveNext',
           actions: 'eventWizardNext'
+        },
+        [EVENT_CREATE]: {
+          //cond: 'eventWizardCreateGuard',
+          actions: 'eventCreate'
         }
       }
     }

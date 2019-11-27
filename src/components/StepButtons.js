@@ -39,7 +39,7 @@ const StepButtons = (props) => {
             variant="contained"
             color="primary"
             size='large'
-            // onClick={props.upsert}
+            onClick={props.upsert}
           >
             Create or Update
           </Button> :
@@ -59,7 +59,7 @@ const StepButtons = (props) => {
                   }
                 </ul>
               </div>
-     
+
           </Button>
       }
     </div>

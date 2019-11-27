@@ -33,7 +33,10 @@ import {
   EVENT_WIZARD_CANCEL,
   EVENT_WIZARD_REVIEW,
   EVENT_WIZARD_DELETE,
-  EVENT_CHANGE, INVITATION_CHANGE, INVITATION_ADD, INVITATION_CANCEL, INVITATION_REMOVE, configureMachine } from '../../store/events';
+  EVENT_CHANGE,
+  EVENT_CREATE,
+  INVITATION_CHANGE, INVITATION_ADD,
+  INVITATION_CANCEL, INVITATION_REMOVE, configureMachine } from '../../store/events';
 
 import eventSchema from "../../schemas/event/eventSchema";
 import eventUISchema from "../../schemas/event/eventUISchema";
@@ -57,11 +60,6 @@ const EventUpsertWizardContainer = (props) => {
     context: {
       eventsState
     }
-  });
-
-  //initializes statechart state to CREATE from READY
-  send({
-    type: EVENT_WIZARD_CREATE
   });
 
   const selectedEventChange = ({formData}) => {
@@ -92,8 +90,6 @@ const EventUpsertWizardContainer = (props) => {
   };
 
   const { selectedEvent, selectedInvitation } = eventsState;
-
-
 
   const schema = eventSchema();
   const schemaProperties = schema.properties;
@@ -141,7 +137,6 @@ const EventUpsertWizardContainer = (props) => {
     const step = schemaProperties[name];
     wizardSteps.push(step);
     if(name == 'invitations'){
-      debugger;
       selectedEventComposite['invitations'] = selectedEvent.invitations;
     } else {
       selectedEventComposite[name] = {};
@@ -165,7 +160,6 @@ const EventUpsertWizardContainer = (props) => {
   console.log(JSON.stringify((errorsList)));
   const errorSchema = result.errorSchema;
 
-  debugger;
   //+1 to our wizard steps
   const wizardStepsCount = wizardSteps.length;
   const selectedSchema = wizardSteps[selectedWizardIndex];
@@ -199,8 +193,6 @@ const EventUpsertWizardContainer = (props) => {
       </Form>
     );
   }
-
-
 
   var style = {
     backgroundColor: "#F8F8F8",
@@ -266,7 +258,10 @@ const EventUpsertWizardContainer = (props) => {
                           selectedInvitation={selectedInvitation}
                           onSelectedInvitationChange = { invitationChangeDebounced }
                           invitationAdd = { invitationAdd }
+                          selectedEvent = { selectedEvent }
                           errors = { errorsList }
+                          send = {send}
+                          state = {state}
                         /> :
                       FullForm(selectedSchema, eventUISchema(), selectedEvent) :
                       <div>{reviewAndCreateSections}</div>
@@ -292,8 +287,8 @@ const EventUpsertWizardContainer = (props) => {
 
                             // cancel={(e) => send({dispatch, type: EVENT_WIZARD_NEXT}
                             // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
-                            createOrUpdate={send({dispatch, type: EVENT_WIZARD_CREATE})}
-
+                            upsert={(e) => send({dispatch, type: EVENT_CREATE, selectedEvent })}
+                            
                             // update={send({dispatch, type: EVENT_WIZARD_UPDATE})}
                             // deleted={send({dispatch, type: EVENT_WIZARD_DELETE})}
                           />

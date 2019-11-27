@@ -1,12 +1,11 @@
 import React, { Component, useState } from "react";
-import set from "lodash/fp/set";
-import { Field } from "redux-form";
+import { useDispatch, useSelector } from "react-redux";
 import Table from "react-table";
 import * as BS from "react-bootstrap";
 import initialData from "./table/dataFactory";
 import FormProvider from "./table/FormProvider";
-import { avatarColumnProps } from "./table/AvatarsCell";
 import ActionsCell from "./table/ActionsCell";
+import SendCell from "./table/SendCell";
 import HighlightCell from "./table/HighlightCell";
 import GridFilters from "./table/GridFilters";
 import Form from "react-jsonschema-form";
@@ -21,10 +20,28 @@ import Box from '@material-ui/core/Box';
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
-export default function(props) {
+import { useMachine } from '@xstate/react';
 
+import {INVITATION_SEND} from '../../store/events';
+
+export default function(props) {
+  const dispatch = useDispatch();
+
+  const {state, send } = props;
   const [editing, setEditing] = useState(null);
   const [eventFormModalIsOpen, eventFormModalToggle ] = useState(false);
+
+  const { selectedEvent } = props;
+
+  const invitationSend = (invitation) => {
+    debugger;
+    send({
+      type: INVITATION_SEND,
+      dispatch,
+      selectedEvent,
+      invitation
+    });
+  };
 
   const toggleModal = event => {
     eventFormModalToggle(!eventFormModalIsOpen);
@@ -65,6 +82,15 @@ export default function(props) {
       }) ||
     {};
 
+  const sendInvitationActionProps = (gridState, rowProps) =>
+  (
+    rowProps && {
+      actions: {
+        onClick: invitationSend
+      }
+    }) ||
+  {};
+
   const columns = [
     {
       Header: "",
@@ -73,10 +99,19 @@ export default function(props) {
       getProps: getActionProps,
       Cell: ActionsCell
     },
-    { Header: "Name",  accessor: "name", ...editableColumnProps,filterable: false, maxWidth: 220 },
-    { Header: "Email or Phone", accessor: "phoneNumberOrEmail", ...editableColumnProps, filterable: false, maxWidth: 280 },
-    { Header: "Message", accessor: "message",  ...editableColumnProps, filterable: false }
+    { Header: "Name",  accessor: "name", ...editableColumnProps,filterable: true, maxWidth: 220 },
+    { Header: "Message", accessor: "message",  ...editableColumnProps, filterable: false },
+    { Header: "Status", accessor: "status",  ...editableColumnProps, filterable: true},
+    { Header: "Will Bring", accessor: "willBring",  ...editableColumnProps, filterable: true },
+    {
+      Header: "",
+      maxWidth: 90,
+      filterable: false,
+      getProps: sendInvitationActionProps,
+      Cell: SendCell
+    }
   ];
+
   const handleSubmit = ({formData}) => {
 
     const event = props.selectedEvent;

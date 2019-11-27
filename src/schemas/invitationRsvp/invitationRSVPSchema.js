@@ -1,29 +1,22 @@
 import React, { PropTypes } from 'react';
+import invitationSchema from "../invitation/invitationSchema";
 
 export default () => {
   return {
-    "title": "Invitation RSVP",
+    "title": "Potluck RSVP",
     "type": "object",
     "required": [
       "willAttend"
     ],
     "properties": {
-      "preferredName": {
-        "type": "string",
-        "title": "preferredName"
-      },
       "willAttend": {
-        "type": "string",
-        "title": "Phone Number"
-      },
-      "message": {
-        "type": "string",
-        "title": "Message"
+        "type": "boolean",
+        "title": "Can and Will Attend?"
       },
       "willBring": {
         "type": "string",
-        "title": "Will Bring"
+        "title": "Will bring?"
       }
     }
-  };
+  }
 };
