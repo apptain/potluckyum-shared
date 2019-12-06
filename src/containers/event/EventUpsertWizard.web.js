@@ -112,9 +112,12 @@ const EventUpsertWizardContainer = (props) => {
   const createFields = (schema) => {
     let fields = [];
 
-    for(const propName in schema.properties) {
-      fields.push(reviewAndCreateField(propName, selectedEvent[propName]));
+    if(selectedEvent) {
+      for(const propName in schema.properties) {
+        fields.push(reviewAndCreateField(propName, selectedEvent[propName]));
+      }
     }
+
 
     return fields;
   }
@@ -136,21 +139,21 @@ const EventUpsertWizardContainer = (props) => {
     stepNames.push(name);
     const step = schemaProperties[name];
     wizardSteps.push(step);
-    if(name == 'invitations'){
-      selectedEventComposite['invitations'] = selectedEvent.invitations;
-    } else {
-      selectedEventComposite[name] = {};
-      //todo refactor
-      for(const propName in step.properties) {
-        selectedEventComposite[name][propName] =
-          selectedEvent[propName] instanceof Date ? selectedEvent[propName].toString() : selectedEvent[propName];
+    if(selectedEvent) {
+      if(name == 'invitations'){
+        selectedEventComposite['invitations'] = selectedEvent.invitations;
+      } else {
+        selectedEventComposite[name] = {};
+        //todo refactor
+        for(const propName in step.properties) {
+          selectedEventComposite[name][propName] =
+            selectedEvent[propName] instanceof Date ? selectedEvent[propName].toString() : selectedEvent[propName];
+        }
       }
     }
 
     reviewAndCreateSections.push(reviewAndCreateSection(name, step));
   }
-
-
 
   const result = validateFormData(
     selectedEventComposite,
@@ -214,8 +217,6 @@ const EventUpsertWizardContainer = (props) => {
   }
 
   const invitationUiSchemaInstance = invitationUISchema();
-
-  debugger;
 
   //TODO clear up gridlock...
   return (
@@ -282,13 +283,14 @@ const EventUpsertWizardContainer = (props) => {
                             errors={errorsList}
                             selectedIndex={selectedWizardIndex}
                             classes={classes}
+                            cancel={(e) => send({dispatch, type: EVENT_WIZARD_CANCEL })}
                             previous={(e) => send({dispatch, type: EVENT_WIZARD_PREVIOUS, selectedWizardIndex, wizardStepsCount })}
                             next={(e) => send({dispatch, type: EVENT_WIZARD_NEXT, selectedWizardIndex, wizardStepsCount})}
 
                             // cancel={(e) => send({dispatch, type: EVENT_WIZARD_NEXT}
                             // review={send({dispatch, type: EVENT_WIZARD_REVIEW})}
                             upsert={(e) => send({dispatch, type: EVENT_CREATE, selectedEvent })}
-                            
+
                             // update={send({dispatch, type: EVENT_WIZARD_UPDATE})}
                             // deleted={send({dispatch, type: EVENT_WIZARD_DELETE})}
                           />

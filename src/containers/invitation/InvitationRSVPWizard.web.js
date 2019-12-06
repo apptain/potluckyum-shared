@@ -127,14 +127,16 @@ const InvitationUpsertWizardContainer = (props) => {
     stepNames.push(name);
     const step = schemaProperties[name];
     wizardSteps.push(step);
-    if(name == 'invitations'){
-      selectedInvitationComposite['invitations'] = selectedInvitation.invitations;
-    } else {
-      selectedInvitationComposite[name] = {};
-      //todo refactor
-      for(const propName in step.properties) {
-        selectedInvitationComposite[name][propName] =
-          selectedInvitation[propName] instanceof Date ? selectedInvitation[propName].toString() : selectedInvitation[propName];
+    if(selectedEvent) {
+      if(name == 'invitations'){
+        selectedInvitationComposite['invitations'] = selectedInvitation.invitations;
+      } else {
+        selectedInvitationComposite[name] = {};
+        //todo refactor
+        for (const propName in step.properties) {
+          selectedInvitationComposite[name][propName] =
+            selectedInvitation[propName] instanceof Date ? selectedInvitation[propName].toString() : selectedInvitation[propName];
+        }
       }
     }
 
@@ -206,7 +208,7 @@ const InvitationUpsertWizardContainer = (props) => {
 
   const invitationUiSchemaInstance = invitationUISchema();
 
-  debugger;
+
 
   //TODO clear up gridlock...
   return (
@@ -218,10 +220,10 @@ const InvitationUpsertWizardContainer = (props) => {
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item container xs={6}>
-                  
+
                 </Grid>
                 <Grid item container xs={6}>
-                  
+
                 </Grid>
               </Paper>
             </Grid>

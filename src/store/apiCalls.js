@@ -35,8 +35,11 @@ Amplify.configure({
   }
 });
 
-export function eventsList() {
-  return API.get("events", "/events");
+export async function eventsList() {
+  return API.get("events", "/events").then((result) => {
+    debugger;
+    return result;
+  });
 }
 
 export function eventGet(id) {
@@ -50,7 +53,7 @@ export function eventUpdate(id, event) {
 }
 
 export function eventCreate(event) {
-  debugger;
+
   return API.post("events", `/events`, {
     body: event
   });
@@ -92,7 +95,7 @@ export function invitationSend(eventId, invitation) {
 }
 
 export function invitationRsvp(id, invitation) {
-  debugger;
+
   return API.put("invitations", `/invitations/${id}`, {
     body: invitation
   });

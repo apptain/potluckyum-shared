@@ -14,11 +14,12 @@ import Form from "react-jsonschema-form";
 import formWidgets from "../../schemaform/widgets";
 import CustomFieldTemplate from "../../schemaform/customFieldTemplate";
 import { TextField, RadioButton, RadioButtonGroup, Checkbox, SelectField, MenuItem }  from 'material-ui';
-
 import { MdDone, MdPersonAdd, MdCancel } from 'react-icons/md';
 import Box from '@material-ui/core/Box';
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+
+import ActionButtonCell from "./table/ActionButtonCell";
 
 import { useMachine } from '@xstate/react';
 
@@ -34,7 +35,7 @@ export default function(props) {
   const { selectedEvent } = props;
 
   const invitationSend = (invitation) => {
-    debugger;
+
     send({
       type: INVITATION_SEND,
       dispatch,
@@ -108,7 +109,7 @@ export default function(props) {
       maxWidth: 90,
       filterable: false,
       getProps: sendInvitationActionProps,
-      Cell: SendCell
+      Cell: ActionButtonCell
     }
   ];
 

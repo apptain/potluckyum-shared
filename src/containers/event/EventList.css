@@ -1,0 +1,32 @@
+.Event .lander {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.Event .lander h1 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+}
+
+.Event .lander p {
+  color: #999;
+}
+
+.Event .lander div {
+  padding-top: 20px;
+}
+.Event .lander div a:first-child {
+  margin-right: 20px;
+}
+
+.Event .notes h4 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  overflow: hidden;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.Event .notes p {
+  color: #666;
+}

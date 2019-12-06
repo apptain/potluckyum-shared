@@ -10,8 +10,12 @@ export const INVITATION_REMOVE = '@potluckyum/INVITATION_REMOVE';
 export const INVITATION_CANCEL = '@potluckyum/INVITATION_CANCEL';
 
 export const EVENT_GET_REQUEST = '@potluck/EVENT_GET_REQUEST';
-export const EVENT_GET_REQUEST_SUCCESS = '@potluck/EVENT_GET_REQUEST_SUCCESS';
-export const EVENT_GET_REQUEST_FAIL = '@potluck/EVENT_GET_REQUEST_FAIL';
+export const EVENT_GET_SUCCESS = '@potluck/EVENT_GET_REQUEST_SUCCESS';
+export const EVENT_GET_FAIL = '@potluck/EVENT_GET_REQUEST_FAIL';
+
+export const EVENTS_GET_REQUEST = '@potluck/EVENTS_GET_REQUEST';
+export const EVENTS_GET_SUCCESS = '@potluck/EVENTS_GET_REQUEST_SUCCESS';
+export const EVENTS_GET_FAIL = '@potluck/EVENTS_GET_REQUEST_FAIL';
 
 export const INVITATION_SEND_REQUEST = '@potluck/INVITATION_SEND_REQUEST';
 export const INVITATION_SEND_SUCCESS = '@potluck/INVITATION_SEND_SUCCESS';
@@ -43,6 +47,13 @@ const initialContext = {
   invitationSending: {},
   invitationSendingResult: {},
   selectedWizardIndex: 0
+};
+
+export const getUserEvents = (dispatch) => {
+
+  dispatch({
+   type: EVENTS_GET_REQUEST
+ });
 };
 
 export const actions = {
@@ -106,7 +117,7 @@ export const actions = {
   },
   eventWizardNext: (ctx, { dispatch, selectedWizardIndex }) =>
   {
-    debugger;
+
     dispatch({
       type: EVENT_WIZARD_NEXT,
       selectedWizardIndex:  selectedWizardIndex + 1
@@ -120,6 +131,13 @@ export const actions = {
       event: selectedEvent
     });
   },
+  eventWizardCancel: (ctx, { dispatch }) =>
+  {
+    //notify saga
+    dispatch({
+      type: EVENT_WIZARD_CANCEL
+    });
+  },
   eventGet: (id) => {
     return {type: eventGet, id};
   },
@@ -131,14 +149,15 @@ export const actions = {
   },
   invitationSend: (ctx, { dispatch, selectedEvent, invitation }) =>
   {
-    debugger;
+
     //notify saga
     dispatch({
       type: INVITATION_SEND_REQUEST,
       eventId: selectedEvent.id,
       invitation
     });
-  }
+  },
+
 };
 
 const guards = {
@@ -197,6 +216,9 @@ const flowMachine = Machine({
           cond: 'eventWizardShouldMoveNext',
           actions: 'eventWizardNext'
         },
+        [EVENT_WIZARD_CANCEL]: {
+          actions: 'eventWizardCancel'
+        },
         [EVENT_CREATE]: {
           //cond: 'eventWizardCreateGuard',
           actions: 'eventCreate'
@@ -222,14 +244,17 @@ const initialState = {
   eventUpdating: false,
   eventGetting: false,
   invitationSending: {},
-  invitationSendingResult: {}
+  invitationSendingResult: {},
+  eventsList: []
 };
 
 export default function reducer(state = initialState, action = {}) {
-  //state = initialState;
   switch (action.type) {
     case EVENT_CHANGE:
       return {...state, selectedEvent: action.selectedEvent};
+    case EVENTS_GET_SUCCESS:
+      debugger;
+      return {...state, eventsList: action.events};
     case INVITATION_CHANGE:
       return {...state, selectedInvitation: action.selectedInvitation};
     case INVITATION_ADD:
@@ -238,8 +263,10 @@ export default function reducer(state = initialState, action = {}) {
       return {...state, selectedWizardIndex: action.selectedWizardIndex};
     case EVENT_WIZARD_NEXT:
       return {...state, selectedWizardIndex: action.selectedWizardIndex};
+    case EVENT_WIZARD_CANCEL:
+      return {...state, ...initialState};
     // case WIZARD_NAVIGATE:
-      //return {...state, selectedInvitation: action.selectedInvitation};
+    //return {...state, selectedInvitation: action.selectedInvitation};
     // case EVENTS_LIST:
     //   return {...state, selectedEvents: [], eventsGetting: true};
     // case EVENTS_LIST_SUCCESS:

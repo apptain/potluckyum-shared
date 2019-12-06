@@ -1,9 +1,12 @@
 import { takeLatest, put, call, fork, take } from 'redux-saga/effects';
-import {eventCreate} from '../apiCalls';
+import {eventCreate, eventsList} from '../apiCalls';
 
-import { EVENT_GET,
+import { EVENT_GET_REQUEST,
   EVENT_GET_SUCCESS,
   EVENT_GET_FAIL,
+  EVENTS_GET_REQUEST,
+  EVENTS_GET_SUCCESS,
+  EVENTS_GET_FAIL,
   EVENT_CREATE,
   EVENT_CREATE_SUCCESS,
   EVENT_CREATE_FAIL,
@@ -12,8 +15,27 @@ import { EVENT_GET,
   INVITATION_SEND_FAIL
  } from '../events';
 
-function* eventCreateRequest(event) {
+function* eventsGetRequest(event) {
+  const response = yield call(eventsList);
+  console.log(response);
   debugger;
+  if(response) {
+    yield put({ type: EVENTS_GET_SUCCESS, events: response })
+  } else {
+    yield put({ type: EVENTS_GET_FAIL, error})
+  }
+}
+
+function* watchEventsGetRequest() {
+  while (true) {
+    yield take(EVENTS_GET_REQUEST);
+
+    yield fork(eventsGetRequest);
+  }
+}
+
+function* eventCreateRequest(event) {
+
   const {response, error} = yield call(eventCreate, event);
   if(response) {
     yield put({ type: EVENT_CREATE_SUCCESS, response })
@@ -30,7 +52,6 @@ function* watchEventCreateRequest() {
 }
 
 function* invitationSendRequest(eventId, invitation) {
-  debugger;
   const {response, error} = yield call(eventId, invitation);
   if(response) {
     yield put({ type: INVITATION_SEND_SUCCESS, response })
@@ -47,6 +68,7 @@ function* watchInvitationSendRequest() {
 }
 
 export default [
+  watchEventsGetRequest(),
   watchEventCreateRequest(),
   watchInvitationSendRequest()
 ];
